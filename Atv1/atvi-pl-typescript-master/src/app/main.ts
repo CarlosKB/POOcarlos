@@ -1,3 +1,4 @@
+import { log } from "console";
 import Entrada from "../io/entrada";
 import Empresa from "../modelo/empresa";
 import CadastroCliente from "../negocio/cadastroCliente";
@@ -9,6 +10,10 @@ import ListagemProdutos from "../negocio/listagemProdutos";
 import ListagemServicos from "../negocio/listagemServico";
 import Selecionador from "../negocio/selecionador";
 import SelecionadorProduto from "../negocio/selecionadorProduto";
+import { loadavg } from "os";
+import EditarProduto from "../negocio/editorProduto";
+import selecionadorServico from "../negocio/selecionadorServico";
+import EditarServico from "../negocio/editarServico";
 
 console.log(`Bem-vindo ao melhor sistema de gerenciamento de pet shops e clínicas veterinarias`)
 let empresa = new Empresa()
@@ -18,14 +23,16 @@ while (execucao) {
     console.log(`Opções:`);
     console.log(`1 - Cadastrar cliente`);
     console.log(`2 - Listar todos os clientes`);
-    console.log(`3 - Cadastrar produto`);
-    console.log(`4 - Listar todos os produtos`);
+    console.log(`3 - Excluir um cliente`);
+    console.log(`4 - Editar um cliente`);
     console.log(`5 - Cadastrar serviço`);
     console.log(`6 - Listar todos os serviços`);
-    console.log(`7 - Excluir um cliente`);
-    console.log(`8 - Editar um cliente`);
-    console.log(`9 - Excluir um produto`);
-    console.log(`10 - Editar um produto`);
+    console.log(`7 - Excluir um serviço`);
+    console.log(`8 - Editar um serviço`)
+    console.log(`9 - Cadastrar produto`);
+    console.log(`10 - Listar todos os produtos`);
+    console.log(`11- Excluir um produto`);
+    console.log(`12 - Editar um produto`);
     console.log(`0 - Sair`);
 
     let entrada = new Entrada()
@@ -36,32 +43,11 @@ while (execucao) {
             let cadastro = new CadastroCliente(empresa.getClientes)
             cadastro.cadastrar()
             break;
-
         case 2:
             let listagem = new ListagemClientes(empresa.getClientes)
             listagem.listar()
             break;
-
         case 3:
-            let cadastroProduto = new CadastroProduto(empresa.getProdutos)
-            cadastroProduto.cadastrar()
-            break;
-        case 4:
-            let listagemProdutos = new ListagemProdutos(empresa.getProdutos)
-            listagemProdutos.listar()
-            break;
-
-        case 5:
-            let cadastroServico = new CadastroServico(empresa.getServicos)
-            cadastroServico.cadastrar()
-            break;
-
-        case 6:
-            let listagemServicos = new ListagemServicos(empresa.getServicos)
-            listagemServicos.listar()
-            break;
-
-        case 7:
             let cpf = entrada.receberTexto('Digite um cpf para exclusão: ')
             let selecionadorCliente = new Selecionador(empresa.getClientes)
             let cliente = selecionadorCliente.selecionarCliente(cpf)
@@ -69,8 +55,7 @@ while (execucao) {
             let indice = empresa.getClientes.indexOf(cliente)
             delete empresa.getClientes[indice]
             break;
-
-        case 8:
+        case 4:
             let cpfEditar = entrada.receberTexto('Digite um cpf para edição: ')
             let selecionadorClienteEditar = new Selecionador(empresa.getClientes)
             let clienteEditar = selecionadorClienteEditar.selecionarCliente(cpfEditar)
@@ -78,8 +63,39 @@ while (execucao) {
             let editor = new EditarCliente()
             editor.editar(clienteEditar)
             break;
-
+        case 5:
+            let cadastroServico = new CadastroServico(empresa.getServicos)
+            cadastroServico.cadastrar()
+            break;
+        case 6:
+            let listagemServicos = new ListagemServicos(empresa.getServicos)
+            listagemServicos.listar()
+            break;
+        case 7:
+            let nomeServico = entrada.receberTexto('Digite o nome do serviço para a exclusão: ')
+            let selecionadorServicoExclusao = new selecionadorServico(empresa.getServicos)
+            let servicoExclusao = selecionadorServicoExclusao.selecionarServicos(nomeServico)
+            console.log(`o serviço selecionado ${servicoExclusao.nome}`);
+            let indiceServico = empresa.getServicos.indexOf(servicoExclusao)
+            delete empresa.getServicos[indiceServico]
+            break;
+        case 8:
+            let nomeServicoEditar = entrada.receberTexto('Digite o nome do serviço para a edição')
+            let selecionadorServicoEditar = new selecionadorServico(empresa.getServicos)
+            let servicoEditar = selecionadorServicoEditar.selecionarServicos(nomeServicoEditar)
+            console.log(`Nome do serviço selecionado ${servicoEditar.nome}`);
+            let editorServico = new EditarServico()
+            editorServico.editarServico(servicoEditar)
+            break;
         case 9:
+            let cadastroProduto = new CadastroProduto(empresa.getProdutos)
+            cadastroProduto.cadastrar()
+            break;
+        case 10:
+            let listagemProdutos = new ListagemProdutos(empresa.getProdutos)
+            listagemProdutos.listar()
+            break;
+        case 11:
             let nomeProduto = entrada.receberTexto('Digite o nome de um produto para exclusão: ')
             let selecionadorProduto = new SelecionadorProduto(empresa.getProdutos)
             let produtoExcluir = selecionadorProduto.selecionarProdutos(nomeProduto)
@@ -87,9 +103,13 @@ while (execucao) {
             let indiceProduto = empresa.getProdutos.indexOf(produtoExcluir)
             delete empresa.getProdutos[indiceProduto]
             break;
-
-        case 10:
-            //aa
+        case 12:
+            let nomeProdutoEditar = entrada.receberTexto('Digite o nome do produto para a edição: ')
+            let selecionadorProdutoEditar = new SelecionadorProduto(empresa.getProdutos)
+            let produtoEditar = selecionadorProdutoEditar.selecionarProdutos(nomeProdutoEditar)
+            console.log(`O produto selecionado foi: ${produtoEditar.nome}`);
+            let editarProduto = new EditarProduto()
+            editarProduto.editarProduto(produtoEditar)
             break;
 
         case 0:

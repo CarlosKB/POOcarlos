@@ -9,7 +9,7 @@ export default class EditarCliente {
         this.entrada = new Entrada()
     }
     public editar(cliente:Cliente): void {
-        console.log(`\nInício do cadastro do cliente`);
+        console.log(`\nInício da edição do cliente`);
         let nome = this.entrada.receberTexto(`Por favor informe o nome do cliente: `)
         let nomeSocial = this.entrada.receberTexto(`Por favor informe o nome social do cliente: `)
         let valor = this.entrada.receberTexto(`Por favor informe o número do cpf: `);
