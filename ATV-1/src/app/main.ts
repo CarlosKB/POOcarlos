@@ -58,17 +58,19 @@ while (execucao) {
     console.log(`11- Excluir um produto`);
     console.log(`12 - Editar um produto`);
     console.log(`13 - Cliente consumir produto ou serviço`);
-    console.log(`14 - Listar produtos consumidos por cliente`);
-    console.log(`15 - Listar serviços consumidos por cliente`);
+    console.log(`14 - Listar produtos consumidos por cliente - Ajustar`);
+    console.log(`15 - Listar serviços consumidos por cliente - Ajustar`);
     console.log(`16 - Cadastrar pet`);
     console.log(`17 - Excluir pet`);
     console.log(`18 - Editar pet`);
     console.log(`19 - Listar pets`);
-    console.log(`20 - Atribuir pet a cliente`);
-    console.log(`21 - `);
-    console.log(`22 - `);
-    console.log(`23 - `);
-    console.log(`24 - `);
+    console.log(`20 - Listar quantidade de vezes que o produto foi consumido pelo cliente - Ajustar`);
+    console.log(`21 - Inutilizado - Ajustar`);
+    console.log(`22 - Listar os clientes que mais consumiram produtos e serviços em quantidade`);
+    console.log(`23 - Listar os clientes que mais consumiram produtos e serviços por valor`);
+    console.log(`24 - listar os produtos e serviços mais consumidos `);
+    console.log(`25 - Listar os produtos mais consumidos por raça de pet`);
+    
 
 
 
@@ -206,7 +208,7 @@ while (execucao) {
         //     delete empresa.getPets[indicePetE]
         //     break;
         case 17:
-            let cpfPetExcluir = entrada.receberTexto('Digite um cpf para edição: ')
+            let cpfPetExcluir = entrada.receberTexto('Digite o cpf do dono do pet: ')
             let selecionadorClientePetExcluir = new Selecionador(empresa.getClientes)
             let clientePetExcluir = selecionadorClientePetExcluir.selecionarCliente(cpfPetExcluir)
             let nomePetClienteExcluir = entrada.receberTexto('Digite o nome do pet para excluir: ')
@@ -259,11 +261,11 @@ while (execucao) {
         //     let listarPetsAtribuidos = new ListagemClientePets(empresa.getClientes)
         //     let listagemPetsClientes = listarPetsAtribuidos.selecionarClientePet(cpfClienteCPet)
         //     break;
-        case 20:
+        case 20://Este está bom
             const listarProdutosConsumidosCliente = new ListagemProdutosMaisConsumidos(empresa.getClientes)
             listarProdutosConsumidosCliente.listar()
             break;
-        case 21://Quantidade de vezes que o produto foi consumido pelo cliente
+        case 21://Quantidade de vezes que o produto foi consumido pelo cliente -- VAlidar código 21
             const listarProdutosMaisConsumidosPorCliente = new ListarProdutosMaisConsumidosPorCliente(empresa.getClientes)
             listarProdutosMaisConsumidosPorCliente.listar()
             break;
