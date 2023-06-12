@@ -25,6 +25,7 @@ export default class AtribuirServicoClienteConsumir{
         let pet = petSelecionador.selecionarpets(nomePet)
         pet.quantidadeConsumidaProdutoEservico += 1
         pet.servicosConsumidos.push(servicoConsumido)
+        servico.listaPets.push(pet)
         //
 
         cliente.getServicosConsumidos.push(servico)

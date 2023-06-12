@@ -38,6 +38,9 @@ import ListagemProdutosMaisConsumidosSla from "../negocio/QuantidadeProdutosCons
 import ListagemProdutosEServicosMaisConsumidosTop from "../negocio/QuantidadeProdutosConsumidosTop";
 import ListagemServicosEprodutosMaisConsumidosValor from "../negocio/ListarServicosEprodutosMaisConsumidosPreco";
 import listagemConsumosPetsPorRaca from "../negocio/ListagemConsumosPetPorRaça";
+import listagemConsumosPetsPortipo from "../negocio/ListagemConsumosPetPorTipo";
+import listagemConsumosPetsPortipoServico from "../negocio/ListagemConsumosPetPorTipoServico";
+import listagemConsumosPetsPorRacaServico from "../negocio/ListagemConsumosPetPorRaçaServico";
 
 console.log(`Bem-vindo ao melhor sistema de gerenciamento de pet shops e clínicas veterinarias`)
 let empresa = new Empresa()
@@ -58,8 +61,8 @@ while (execucao) {
     console.log(`11- Excluir um produto`);
     console.log(`12 - Editar um produto`);
     console.log(`13 - Cliente consumir produto ou serviço`);
-    console.log(`14 - Listar produtos consumidos por cliente - Ajustar`);
-    console.log(`15 - Listar serviços consumidos por cliente - Ajustar`);
+    console.log(`14 - Listar produtos consumidos por cliente`);
+    console.log(`15 - Listar serviços consumidos por cliente`);
     console.log(`16 - Cadastrar pet`);
     console.log(`17 - Excluir pet`);
     console.log(`18 - Editar pet`);
@@ -70,7 +73,13 @@ while (execucao) {
     console.log(`23 - Listar os clientes que mais consumiram produtos e serviços por valor`);
     console.log(`24 - listar os produtos e serviços mais consumidos `);
     console.log(`25 - Listar os produtos mais consumidos por raça de pet`);
+    console.log(`26 - Listar os produtos mais consumidos tipo de pets`);
+    console.log(`27 - Listar os servicos mais consumidos raça de pets`);
+    console.log(`28 - Listar os servicos mais consumidos tipo de pets`);
     
+    
+    
+
 
 
 
@@ -193,7 +202,7 @@ while (execucao) {
         //     cadastrarPet.cadastrar()
         //     break;
         case 16:
-            let cpfPet = entrada.receberTexto('Digite um cpf para edição: ')
+            let cpfPet = entrada.receberTexto('Digite um cpf para atribuir ao pet que será cadastrado: ')
             let selecionadorClientePet = new Selecionador(empresa.getClientes)
             let clientePet = selecionadorClientePet.selecionarCliente(cpfPet)
             let cadastrarPet = new CadastroPetCliente(clientePet, empresa.getPets)
@@ -281,9 +290,21 @@ while (execucao) {
             const listagemProdutosMaisConsumidos = new ListagemProdutosEServicosMaisConsumidosTop(empresa)
             listagemProdutosMaisConsumidos.listar()
             break;
-        case 25:
-            const listagemConsumoPetRaca = new  listagemConsumosPetsPorRaca(empresa.getPets,empresa.getProdutos)
+        case 25://Listagem dos produtos mais consumidos raça de pets.
+            const listagemConsumoPetRaca = new listagemConsumosPetsPorRaca(empresa.getPets, empresa.getProdutos)
             listagemConsumoPetRaca.listar()
+            break;
+        case 26://Listagem dos produtos mais consumidos tipo de pets.
+            const listagemConsumoPetTipo = new listagemConsumosPetsPortipo(empresa.getPets, empresa.getProdutos)
+            listagemConsumoPetTipo.listar()
+            break;
+        case 27://Listagem dos servicos mais consumidos raca de pets.
+            const listagemConsumoPetRacaServico = new listagemConsumosPetsPorRacaServico(empresa.getPets, empresa.getServicos)
+            listagemConsumoPetRacaServico.listar()
+            break;
+        case 28://Listagem dos servicos mais consumidos tipo de pets.
+            const listagemConsumoPetTipoServico = new listagemConsumosPetsPortipoServico(empresa.getPets, empresa.getServicos)
+            listagemConsumoPetTipoServico.listar()
             break;
         case 0:
             execucao = false
