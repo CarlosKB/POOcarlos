@@ -74,14 +74,16 @@ function cadastrarTelefone(ClienteID, TelefoneDDD, TelefoneNumero, callback) {
 //     })
 // }
 
-function recuperarClienteProdutoID(nomeCliente, nomeProduto, callback) {
+
+function recuperarClienteServicoPetID(nomeCliente, nomeServico, nomePet, callback) {
     cliente.query(
-        `SELECT c.ClienteID, p.ProdutoID
+        `SELECT c.ClienteID, s.ServicoID, pt.PetID
       FROM Cliente c
-      JOIN ProdutosConsumidosCliente pc ON c.ClienteID = pc.ClienteID
-      JOIN Produto p ON pc.ProdutoID = p.ProdutoID
-      WHERE c.ClienteNomeSocial = $1 AND p.ProdutoNome = $2`,
-        [nomeCliente, nomeProduto],
+      JOIN ServicoConsumidosCliente sc ON c.ClienteID = sc.ClienteID
+      JOIN Servico s ON sc.ServicoID = s.ServicoID
+      JOIN Pets pt ON sc.PetID = pt.PetID
+      WHERE c.ClienteNomeSocial = $1 AND s.ServicoNome = $2 AND pt.PetNome = $3`,
+        [nomeCliente, nomeServico, nomePet],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -93,17 +95,40 @@ function recuperarClienteProdutoID(nomeCliente, nomeProduto, callback) {
     );
 }
 
-function consumirProduto(nomeCliente, nomeProduto, callback) {
-    recuperarClienteProdutoID(nomeCliente, nomeProduto, (err, result) => {
+
+function recuperarClienteProdutoPetID(nomeCliente, nomeProduto, nomePet, callback) {
+    cliente.query(
+        `SELECT c.ClienteID, p.ProdutoID, pt.PetID
+      FROM Cliente c
+      JOIN ProdutosConsumidosCliente pc ON c.ClienteID = pc.ClienteID
+      JOIN Produto p ON pc.ProdutoID = p.ProdutoID
+      JOIN Pets pt ON pc.PetID = pt.PetID
+      WHERE c.ClienteNomeSocial = $1 AND p.ProdutoNome = $2 AND pt.PetNome = $3`,
+        [nomeCliente, nomeProduto, nomePet],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
+                callback(null, result.rows);
+            }
+        }
+    );
+}
+
+
+function consumirProduto(nomeCliente, nomeProduto, nomePet, callback) {
+    recuperarClienteProdutoPetID(nomeCliente, nomeProduto, nomePet, (err, result) => {
         if (err) {
             callback(err);
         } else {
             const clienteID = result[0].ClienteID;
             const produtoID = result[0].ProdutoID;
+            const petID = result[0].PetID;
 
             cliente.query(
-                "INSERT INTO ProdutosConsumidosCliente (ProdutoID, ClienteID) VALUES ($1, $2)",
-                [produtoID, clienteID],
+                "INSERT INTO ProdutosConsumidosCliente (ProdutoID, ClienteID, PetID) VALUES ($1, $2, $3)",
+                [produtoID, clienteID, petID],
                 (err, result) => {
                     if (err) {
                         console.log(err);
@@ -116,36 +141,20 @@ function consumirProduto(nomeCliente, nomeProduto, callback) {
         }
     });
 }
-function recuperarClienteServicoID(nomeCliente, nomeServico, callback) {
-    cliente.query(
-        `SELECT c.ClienteID, s.ServicoID
-      FROM Cliente c
-      JOIN ServicoConsumidosCliente sc ON c.ClienteID = sc.ClienteID
-      JOIN Servico s ON sc.ServicoID = s.ServicoID
-      WHERE c.ClienteNomeSocial = $1 AND s.ServicoNome = $2`,
-        [nomeCliente, nomeServico],
-        (err, result) => {
-            if (err) {
-                console.log(err);
-                callback(err);
-            } else {
-                callback(null, result.rows);
-            }
-        }
-    );
-}
 
-function consumirServico(nomeCliente, nomeServico, callback) {
-    recuperarClienteServicoID(nomeCliente, nomeServico, (err, result) => {
+
+function consumirServico(nomeCliente, nomeServico, nomePet, callback) {
+    recuperarClienteServicoPetID(nomeCliente, nomeServico, nomePet, (err, result) => {
         if (err) {
             callback(err);
         } else {
             const clienteID = result[0].ClienteID;
             const servicoID = result[0].ServicoID;
+            const petID = result[0].PetID;
 
             cliente.query(
-                "INSERT INTO ServicoConsumidosCliente (ServicoID, ClienteID) VALUES ($1, $2)",
-                [servicoID, clienteID],
+                "INSERT INTO ServicoConsumidosCliente (ServicoID, ClienteID, PetID) VALUES ($1, $2, $3)",
+                [servicoID, clienteID, petID],
                 (err, result) => {
                     if (err) {
                         console.log(err);
@@ -160,9 +169,9 @@ function consumirServico(nomeCliente, nomeServico, callback) {
 }
 
 app.post("/consumirServico", (req, res) => {
-    const { nomeCliente, nomeServico } = req.body;
+    const { nomeCliente, nomeServico, nomePet } = req.body;
 
-    consumirServico(nomeCliente, nomeServico, (err, result) => {
+    consumirServico(nomeCliente, nomeServico, nomePet, (err, result) => {
         if (err) {
             res.status(500).json({ error: "Erro ao consumir serviço" });
         } else {
@@ -173,9 +182,9 @@ app.post("/consumirServico", (req, res) => {
 
 
 app.post("/consumirProduto", (req, res) => {
-    const { nomeCliente, nomeProduto } = req.body;
+    const { nomeCliente, nomeProduto, nomePet } = req.body;
 
-    consumirProduto(nomeCliente, nomeProduto, (err, result) => {
+    consumirProduto(nomeCliente, nomeProduto, nomePet, (err, result) => {
         if (err) {
             res.status(500).json({ error: "Erro ao consumir produto" });
         } else {
@@ -183,6 +192,7 @@ app.post("/consumirProduto", (req, res) => {
         }
     });
 });
+
 
 app.post('/cadastroCliente', (req, res) => {
     const { ClienteNomeSocial, ClienteCPF, ClienteCPFDataEmissao, ClienteRG, ClienteRGDataEmissao, ClienteDataCadastro } = req.body;
