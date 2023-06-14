@@ -47,7 +47,8 @@ function cadastrarPet(ClienteID, PetNome, PetRaca, PetTipo, PetGenero, callback)
 }
 
 function obterClienteIDPorCPF(clienteCPF, callback) {
-    cliente.query(
+    
+    cliente.query(      
         "SELECT ClienteID FROM Cliente WHERE ClienteCPF = $1",
         [clienteCPF],
         (err, result) => {
@@ -57,6 +58,7 @@ function obterClienteIDPorCPF(clienteCPF, callback) {
             } else {
                 if (result.rows.length > 0) {
                     const clienteID = result.rows[0].clienteid;
+                    
                     callback(null, clienteID);
                 } else {
                     const error = new Error("Cliente não encontrado");
@@ -128,19 +130,20 @@ function recuperarClienteServicoPetID(clienteCPF, nomeServico, nomePet, callback
 
 function recuperarClienteProdutoPetID(clienteCPF, nomeProduto, nomePet, callback) {
     cliente.query(
-        `SELECT c.ClienteID, p.ProdutoID, pt.PetID
-      FROM Cliente c
-      JOIN ProdutosConsumidosCliente pc ON c.ClienteID = pc.ClienteID
-      JOIN Produto p ON pc.ProdutoID = p.ProdutoID
-      JOIN Pets pt ON pc.PetID = pt.PetID
-      WHERE c.ClienteCPF = $1 AND p.ProdutoNome = $2 AND pt.PetNome = $3`,
+        `SELECT c.ClienteID, p.PetID, pr.ProdutoID
+        FROM Cliente c
+        JOIN Pets p ON c.ClienteID = p.ClienteID
+        JOIN Produto pr ON pr.ProdutoNome = $2
+        WHERE c.ClienteCPF = $1 AND p.PetNome = $3;`,
         [clienteCPF, nomeProduto, nomePet],
         (err, result) => {
             if (err) {
                 console.log(err);
                 callback(err);
-            } else {
+            } else {console.log(result.rows);
                 callback(null, result.rows);
+                
+                
             }
         }
     );
@@ -149,14 +152,16 @@ function recuperarClienteProdutoPetID(clienteCPF, nomeProduto, nomePet, callback
 
 
 function consumirProduto(clienteCpf, nomeProduto, nomePet, callback) {
+
     recuperarClienteProdutoPetID(clienteCpf, nomeProduto, nomePet, (err, result) => {
         if (err) {
             callback(err);
+            
         } else {
-            const clienteID = result[0].ClienteID;
-            const produtoID = result[0].ProdutoID;
-            const petID = result[0].PetID;
-
+            const clienteID = result[0].clienteid;
+            const produtoID = result[0].produtoid;
+            const petID = result[0].petid;
+            
             cliente.query(
                 "INSERT INTO ProdutosConsumidosCliente (ProdutoID, ClienteID, PetID) VALUES ($1, $2, $3)",
                 [produtoID, clienteID, petID],
@@ -578,14 +583,16 @@ app.get("/ListarTelefones", (req, res) => {
 });
 
 app.get("/listarPetsPorCPF", (req, res) => {
-    const { cpf } = req.body;
-
+    const { cpf } = req.query;
+    
     listarPetsPorCPF(cpf, (err, pets) => {
         if (err) {
             console.log(err);
             res.status(500).json({ error: "Erro ao listar os pets" });
         } else {
             res.json(pets);
+            console.log(pets);
+            
         }
     });
 });
@@ -607,7 +614,7 @@ app.post("/consumirServico", (req, res) => {
 
 app.post("/consumirProduto", (req, res) => {
     const { clienteCpf, nomeProduto, nomePet } = req.body;
-
+    
     consumirProduto(clienteCpf, nomeProduto, nomePet, (err, result) => {
         if (err) {
             res.status(500).json({ error: "Erro ao consumir produto" });
