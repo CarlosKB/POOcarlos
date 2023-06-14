@@ -10,7 +10,9 @@ export default class EditarProduto {
     public editarProduto(produto: Produto): void {
         console.log(`\nInício da edição do produto`);
         let nomeProduto = this.entrada.receberTexto(`Por favor informe o nome do produto: `)
+        let precoProduto = this.entrada.receberNumero(`Por favor digite o valor do produto: `)
         produto.nome = nomeProduto
+        produto.preco = precoProduto
         console.log(`\Edição concluída :)\n`);
     }
 }
