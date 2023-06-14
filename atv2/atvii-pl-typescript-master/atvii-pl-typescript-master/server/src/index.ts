@@ -11,10 +11,6 @@ const cliente = new Pool({
     user: "postgres",
     password: "1234",
     database: "Empresa",
-    // connectionString: 'postgres://jgkjdnpq:LSQ78hphQqJtTT5At_aS9Z-T3Dps25iG@silly.db.elephantsql.com/jgkjdnpq',
-    // ssl: {
-    //   rejectUnauthorized: false
-    // }
 });
 
 
@@ -48,6 +44,51 @@ function cadastrarPet(ClienteID, PetNome, PetRaca, PetTipo, PetGenero, callback)
     });
 }
 
+function obterClienteIDPorCPF(clienteCPF, callback) {
+    cliente.query(
+        "SELECT ClienteID FROM Cliente WHERE ClienteCPF = $1",
+        [clienteCPF],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
+                if (result.rows.length > 0) {
+                    const clienteID = result.rows[0].ClienteID;
+                    callback(null, clienteID);
+                } else {
+                    const error = new Error("Cliente não encontrado");
+                    callback(error);
+                }
+            }
+        }
+    );
+}
+
+
+function listarTelefonesPorCPF(clienteCPF, callback) {
+    obterClienteIDPorCPF(clienteCPF, (err, clienteID) => {
+        if (err) {
+            callback(err);
+        } else {
+            cliente.query(
+                "SELECT TelefoneDDD, TelefoneNumero FROM ClienteTelefone WHERE ClienteID = $1",
+                [clienteID],
+                (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        callback(err);
+                    } else {
+                        const telefones = result.rows;
+                        callback(null, telefones);
+                    }
+                }
+            );
+        }
+    });
+}
+
+
 function cadastrarTelefone(ClienteID, TelefoneDDD, TelefoneNumero, callback) {
     let SQL = "INSERT INTO ClienteTelefone (ClienteID, TelefoneDDD, TelefoneNumero) VALUES ($1, $2, $3)";
     cliente.query(SQL, [ClienteID, TelefoneDDD, TelefoneNumero], (err, result) => {
@@ -60,30 +101,16 @@ function cadastrarTelefone(ClienteID, TelefoneDDD, TelefoneNumero, callback) {
     });
 }
 
-
-
-
-// async function cadastroCliente(ClienteNomeSocial: string, ClienteCPF: String, ClienteCPFDataEmissao: String, ClienteRG: String, ClienteRGDataEmissao: String, ClienteDataCadastro: String, res) {
-//     let SQL = "INSERT INTO cliente (ClienteNomeSocial, ClienteCPF, ClienteCPFDataEmissao, ClienteRG, ClienteRGDataEmissao, ClientedataCadastro) VALUES('" + ClienteNomeSocial + "', '" + ClienteCPF + "', '" + ClienteCPFDataEmissao + "', '" + ClienteRG + "','" + ClienteRGDataEmissao + "', '" + ClienteDataCadastro + "')"
-//     cliente.query(SQL, (err, result) => {
-//         if (err) {
-//             console.log(err)
-//         } else {
-//             res.send({ msg: "Usuário cadastrado com sucesso." })
-//         }
-//     })
-// }
-
-
-function recuperarClienteServicoPetID(nomeCliente, nomeServico, nomePet, callback) {
+//Consumir produto e Serviço
+function recuperarClienteServicoPetID(clienteCPF, nomeServico, nomePet, callback) {
     cliente.query(
         `SELECT c.ClienteID, s.ServicoID, pt.PetID
       FROM Cliente c
       JOIN ServicoConsumidosCliente sc ON c.ClienteID = sc.ClienteID
       JOIN Servico s ON sc.ServicoID = s.ServicoID
       JOIN Pets pt ON sc.PetID = pt.PetID
-      WHERE c.ClienteNomeSocial = $1 AND s.ServicoNome = $2 AND pt.PetNome = $3`,
-        [nomeCliente, nomeServico, nomePet],
+      WHERE c.ClienteCPF = $1 AND s.ServicoNome = $2 AND pt.PetNome = $3`,
+        [clienteCPF, nomeServico, nomePet],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -96,15 +123,16 @@ function recuperarClienteServicoPetID(nomeCliente, nomeServico, nomePet, callbac
 }
 
 
-function recuperarClienteProdutoPetID(nomeCliente, nomeProduto, nomePet, callback) {
+
+function recuperarClienteProdutoPetID(clienteCPF, nomeProduto, nomePet, callback) {
     cliente.query(
         `SELECT c.ClienteID, p.ProdutoID, pt.PetID
       FROM Cliente c
       JOIN ProdutosConsumidosCliente pc ON c.ClienteID = pc.ClienteID
       JOIN Produto p ON pc.ProdutoID = p.ProdutoID
       JOIN Pets pt ON pc.PetID = pt.PetID
-      WHERE c.ClienteNomeSocial = $1 AND p.ProdutoNome = $2 AND pt.PetNome = $3`,
-        [nomeCliente, nomeProduto, nomePet],
+      WHERE c.ClienteCPF = $1 AND p.ProdutoNome = $2 AND pt.PetNome = $3`,
+        [clienteCPF, nomeProduto, nomePet],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -117,8 +145,9 @@ function recuperarClienteProdutoPetID(nomeCliente, nomeProduto, nomePet, callbac
 }
 
 
-function consumirProduto(nomeCliente, nomeProduto, nomePet, callback) {
-    recuperarClienteProdutoPetID(nomeCliente, nomeProduto, nomePet, (err, result) => {
+
+function consumirProduto(clienteCpf, nomeProduto, nomePet, callback) {
+    recuperarClienteProdutoPetID(clienteCpf, nomeProduto, nomePet, (err, result) => {
         if (err) {
             callback(err);
         } else {
@@ -142,9 +171,8 @@ function consumirProduto(nomeCliente, nomeProduto, nomePet, callback) {
     });
 }
 
-
-function consumirServico(nomeCliente, nomeServico, nomePet, callback) {
-    recuperarClienteServicoPetID(nomeCliente, nomeServico, nomePet, (err, result) => {
+function consumirServico(clienteCpf, nomeServico, nomePet, callback) {
+    recuperarClienteServicoPetID(clienteCpf, nomeServico, nomePet, (err, result) => {
         if (err) {
             callback(err);
         } else {
@@ -168,10 +196,318 @@ function consumirServico(nomeCliente, nomeServico, nomePet, callback) {
     });
 }
 
-app.post("/consumirServico", (req, res) => {
-    const { nomeCliente, nomeServico, nomePet } = req.body;
+function listarPetsPorCPF(cpf, callback) {
+    obterClienteIDPorCPF(cpf, (err, clienteID) => {
+        if (err) {
+            callback(err);
+        } else {
+            cliente.query(
+                `SELECT PetID, PetNome FROM Pets WHERE ClienteID = $1`,
+                [clienteID],
+                (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        callback(err);
+                    } else {
+                        callback(null, result.rows);
+                    }
+                }
+            );
+        }
+    });
+}
 
-    consumirServico(nomeCliente, nomeServico, nomePet, (err, result) => {
+function listarServicos(callback) {
+    cliente.query('SELECT * FROM Servico', (err, result) => {
+        if (err) {
+            console.log(err);
+            callback(err);
+        } else {
+            callback(null, result.rows);
+        }
+    });
+}
+
+
+function listarProdutos(callback) {
+    cliente.query("SELECT * FROM Produto", (err, result) => {
+        if (err) {
+            console.log(err);
+            callback(err);
+        } else {
+            callback(null, result.rows);
+        }
+    });
+}
+
+function listarServicosMaisConsumidosPorRaca(raca, callback) {
+    cliente.query(
+        `SELECT s.ServicoNome, COUNT(*) AS Quantidade
+      FROM Servico s
+      JOIN ServicosConsumidosCliente sc ON s.ServicoID = sc.ServicoID
+      JOIN Pets p ON sc.PetID = p.PetID
+      WHERE p.PetRaca = $1
+      GROUP BY s.ServicoNome
+      ORDER BY Quantidade DESC`,
+        [raca],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
+                callback(null, result.rows);
+            }
+        }
+    );
+}
+
+
+function listarProdutosMaisConsumidosPorRaca(racaPet, callback) {
+    cliente.query(
+        `SELECT p.ProdutoNome, COUNT(*) AS Quantidade
+      FROM Produto p
+      JOIN ProdutosConsumidosCliente pc ON p.ProdutoID = pc.ProdutoID
+      JOIN Pets pt ON pc.PetID = pt.PetID
+      WHERE pt.PetRaca = $1
+      GROUP BY p.ProdutoNome
+      ORDER BY Quantidade DESC`,
+        [racaPet],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
+                callback(null, result.rows);
+            }
+        }
+    );
+}
+
+
+function listarProdutosMaisConsumidosPorTipoPet(tipoPet, callback) {
+    cliente.query(
+        `SELECT p.ProdutoNome, COUNT(*) AS Quantidade
+      FROM Produto p
+      JOIN ProdutosConsumidosCliente pc ON p.ProdutoID = pc.ProdutoID
+      JOIN Pets pt ON pc.PetID = pt.PetID
+      WHERE pt.PetTipo = $1
+      GROUP BY p.ProdutoNome
+      ORDER BY Quantidade DESC`,
+        [tipoPet],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
+                callback(null, result.rows);
+            }
+        }
+    );
+}
+
+
+function listarServicosMaisConsumidosPorTipoPet(tipoPet, callback) {
+    cliente.query(
+        `SELECT s.ServicoNome, COUNT(*) AS Quantidade
+      FROM Servico s
+      JOIN ServicosConsumidosCliente sc ON s.ServicoID = sc.ServicoID
+      JOIN Pets p ON sc.PetID = p.PetID
+      WHERE p.PetTipo = $1
+      GROUP BY s.ServicoNome
+      ORDER BY Quantidade DESC`,
+        [tipoPet],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
+                callback(null, result.rows);
+            }
+        }
+    );
+}
+
+function cadastrarPetPorCpf(nomePet, tipoPet, petRaca, petgenero, clienteCPF, callback) {
+    obterClienteIDPorCPF(clienteCPF, (err, clienteID) => {
+        if (err) {
+            callback(err);
+        } else {
+            cliente.query(
+                'INSERT INTO Pets (PetNome, PetTipo, petraca, petgenero, ClienteID) VALUES ($1, $2, $3, $4)',
+                [nomePet, tipoPet, petRaca, petgenero, clienteID],
+                (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        callback(err);
+                    } else {
+                        callback(null, result);
+                    }
+                }
+            );
+        }
+    });
+}
+
+function cadastrarTelefonePorCPF(ddd, numero, clienteCPF, callback) {
+    obterClienteIDPorCPF(clienteCPF, (err, clienteID) => {
+        if (err) {
+            callback(err);
+        } else {
+            cliente.query(
+                'INSERT INTO Telefone (DDD, Numero, ClienteID) VALUES ($1, $2, $3)',
+                [ddd, numero, clienteID],
+                (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        callback(err);
+                    } else {
+                        callback(null, result);
+                    }
+                }
+            );
+        }
+    });
+}
+
+
+app.post('/cadastrarTelefone', (req, res) => {
+    const { ddd, numero, clienteCPF } = req.body;
+
+    cadastrarTelefonePorCPF(ddd, numero, clienteCPF, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: 'Erro ao cadastrar telefone' });
+        } else {
+            res.json({ message: 'Telefone cadastrado com sucesso' });
+        }
+    });
+});
+
+
+app.post("/cadastrarPetPorCPF", (req, res) => {
+    const { nomePet, tipoPet, petRaca, petGenero, clienteCPF } = req.body;
+
+    cadastrarPetPorCpf(nomePet, tipoPet, petRaca, petGenero, clienteCPF, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: "Erro ao cadastrar o pet" });
+        } else {
+            res.json({ message: "Pet cadastrado com sucesso" });
+        }
+    });
+});
+
+
+
+app.get("/servicosMaisConsumidosPorRaca", (req, res) => {
+    const { raca } = req.body;
+
+    listarServicosMaisConsumidosPorRaca(raca, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: "Erro ao obter os serviços mais consumidos por raça" });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+app.get("/servicosMaisConsumidosPorTipoPet/:tipoPet", (req, res) => {
+    const tipoPet = req.params.tipoPet;
+
+    listarServicosMaisConsumidosPorTipoPet(tipoPet, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: "Erro ao listar serviços mais consumidos por tipo de pet" });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+app.get('/produtosMaisConsumidosPorTipoPet', (req, res) => {
+    const { tipoPet } = req.body;
+
+    listarProdutosMaisConsumidosPorTipoPet(tipoPet, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: 'Erro ao listar produtos mais consumidos por tipo de pet' });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+app.get('/produtosMaisConsumidosPorRaca', (req, res) => {
+    const { raca } = req.body;
+
+    listarProdutosMaisConsumidosPorRaca(raca, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: 'Erro ao listar produtos mais consumidos por raça' });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+
+app.get("/listarProdutos", (req, res) => {
+    listarProdutos((err, produtos) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ error: "Erro ao listar os produtos" });
+        } else {
+            res.json(produtos);
+        }
+    });
+});
+
+app.get('/servicos', (req, res) => {
+    listarServicos((err, result) => {
+        if (err) {
+            res.status(500).json({ error: 'Erro ao listar os serviços' });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+app.get("/ListarTelefones", (req, res) => {
+    const { cpf } = req.body;
+
+    obterClienteIDPorCPF(cpf, (err, clienteID) => {
+        if (err) {
+            res.status(500).json({ error: "Erro ao obter ID do cliente" });
+        } else {
+            listarTelefonesPorCPF(cpf, (err, telefones) => {
+                if (err) {
+                    res.status(500).json({ error: "Erro ao listar telefones" });
+                } else {
+                    res.json({ clienteID, telefones });
+                }
+            });
+        }
+    });
+});
+
+app.get("/listarPetsPorCPF", (req, res) => {
+    const { cpf } = req.body;
+
+    listarPetsPorCPF(cpf, (err, pets) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ error: "Erro ao listar os pets" });
+        } else {
+            res.json(pets);
+        }
+    });
+});
+
+
+
+app.post("/consumirServico", (req, res) => {
+    const { clienteCpf, nomeServico, nomePet } = req.body;
+
+    consumirServico(clienteCpf, nomeServico, nomePet, (err, result) => {
         if (err) {
             res.status(500).json({ error: "Erro ao consumir serviço" });
         } else {
@@ -182,9 +518,9 @@ app.post("/consumirServico", (req, res) => {
 
 
 app.post("/consumirProduto", (req, res) => {
-    const { nomeCliente, nomeProduto, nomePet } = req.body;
+    const { clienteCpf, nomeProduto, nomePet } = req.body;
 
-    consumirProduto(nomeCliente, nomeProduto, nomePet, (err, result) => {
+    consumirProduto(clienteCpf, nomeProduto, nomePet, (err, result) => {
         if (err) {
             res.status(500).json({ error: "Erro ao consumir produto" });
         } else {
@@ -192,6 +528,7 @@ app.post("/consumirProduto", (req, res) => {
         }
     });
 });
+//Final ConsumirProdutoServico
 
 
 app.post('/cadastroCliente', (req, res) => {
@@ -244,8 +581,8 @@ app.get("/getClientes", (req, res) => {
     );
 });
 
-app.get("/clientesMaisConsumiramProdutos", (req, res) => {
-    const quantidade = req.query.quantidade || 5; // Número padrão de clientes a serem exibidos
+app.get("/clientesMaisConsumiramProdutosQTD", (req, res) => {
+    const quantidade = req.body.quantidade || 10; // Número padrão de clientes a serem exibidos
 
     const SQL = `
       SELECT c.ClienteID, c.ClienteNomeSocial, COUNT(pc.ProdutoID) AS total_produtos_consumidos
@@ -267,8 +604,8 @@ app.get("/clientesMaisConsumiramProdutos", (req, res) => {
 });
 
 
-app.get("/clientesMaisConsumiramServicos", (req, res) => {
-    const quantidade = req.query.quantidade || 5; // Número padrão de clientes a serem exibidos
+app.get("/clientesMaisConsumiramServicosQTD", (req, res) => {
+    const quantidade = req.body.quantidade || 10; // Número padrão de clientes a serem exibidos
 
     const SQL = `
       SELECT c.ClienteID, c.ClienteNomeSocial, COUNT(sc.ServicoID) AS total_servicos_consumidos
@@ -291,7 +628,7 @@ app.get("/clientesMaisConsumiramServicos", (req, res) => {
 
 
 app.get("/clientesMaisConsumiramProdutosValor", (req, res) => {
-    const quantidade = req.query.quantidade || 5; // Número padrão de clientes a serem exibidos
+    const quantidade = req.body.quantidade || 10; // Número padrão de clientes a serem exibidos
 
     const SQL = `
       SELECT c.ClienteID, c.ClienteNomeSocial, SUM(p.ProdutoPreco) AS total_valor_produtos_consumidos
@@ -315,7 +652,7 @@ app.get("/clientesMaisConsumiramProdutosValor", (req, res) => {
 
 
 app.get("/clientesMaisConsumiramServicosValor", (req, res) => {
-    const quantidade = req.query.quantidade || 5; // Número padrão de clientes a serem exibidos
+    const quantidade = req.body.quantidade || 10; // Número padrão de clientes a serem exibidos
 
     const SQL = `
       SELECT c.ClienteID, c.ClienteNomeSocial, SUM(s.ServicoPreco) AS total_valor_servicos_consumidos

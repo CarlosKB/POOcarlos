@@ -72,17 +72,13 @@ while (execucao) {
     console.log(`22 - Listar os clientes que mais consumiram produtos e serviços em quantidade`);
     console.log(`23 - Listar os clientes que mais consumiram produtos e serviços por valor`);
     console.log(`24 - listar os produtos e serviços mais consumidos `);
-    console.log(`25 - Listar os produtos mais consumidos por raça de pet`);
+    console.log(`25 - Listar os produtos mais consumidos por raça de pets`);
     console.log(`26 - Listar os produtos mais consumidos tipo de pets`);
     console.log(`27 - Listar os servicos mais consumidos raça de pets`);
     console.log(`28 - Listar os servicos mais consumidos tipo de pets`);
     
     
     
-
-
-
-
 
     console.log(`0 - Sair`);
 
