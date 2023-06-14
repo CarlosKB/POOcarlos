@@ -73,9 +73,9 @@ while (execucao) {
     console.log(`23 - Listar os clientes que mais consumiram produtos e serviços por valor`);
     console.log(`24 - listar os produtos e serviços mais consumidos `);
     console.log(`25 - Listar os produtos mais consumidos por raça de pets`);
-    console.log(`26 - Listar os produtos mais consumidos tipo de pets`);
-    console.log(`27 - Listar os servicos mais consumidos raça de pets`);
-    console.log(`28 - Listar os servicos mais consumidos tipo de pets`);
+    console.log(`26 - Listar os produtos mais consumidos por tipo de pets`);
+    console.log(`27 - Listar os servicos mais consumidos por raça de pets`);
+    console.log(`28 - Listar os servicos mais consumidos por tipo de pets`);
     
     
     
@@ -231,7 +231,7 @@ while (execucao) {
         //     editorPet.editarPet(petEditar)
         //     break;
         case 18:
-            let cpfClientePetEditar = entrada.receberTexto('Digite o cpf do pet para edição: ')
+            let cpfClientePetEditar = entrada.receberTexto('Digite o cpf do cliente para edição do pet: ')
             let selecionadorClientePetEditar = new Selecionador(empresa.getClientes)
             let clientePetEditar = selecionadorClientePetEditar.selecionarCliente(cpfClientePetEditar)
             let nomePetClienteEditar = entrada.receberTexto('Digite o nome do pet para editar: ')
