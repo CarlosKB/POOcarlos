@@ -370,6 +370,36 @@ function cadastrarTelefonePorCPF(ddd, numero, clienteCPF, callback) {
 }
 
 
+function listarProdutosMaisConsumidos(callback) {
+    cliente.query(
+        `SELECT p.ProdutoNome, COUNT(*) AS Quantidade
+      FROM Produto p
+      JOIN ProdutosConsumidosCliente pc ON p.ProdutoID = pc.ProdutoID
+      GROUP BY p.ProdutoNome
+      ORDER BY Quantidade DESC`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
+                callback(null, result.rows);
+            }
+        }
+    );
+}
+
+
+app.get("/produtosMaisConsumidos", (req, res) => {
+    listarProdutosMaisConsumidos((err, produtos) => {
+        if (err) {
+            res.status(500).json({ error: "Erro ao listar produtos mais consumidos" });
+        } else {
+            res.json(produtos);
+        }
+    });
+});
+
+
 app.post('/cadastrarTelefone', (req, res) => {
     const { ddd, numero, clienteCPF } = req.body;
 
@@ -573,7 +603,7 @@ app.post('/cadastroCliente', (req, res) => {
 
 app.get("/getClientes", (req, res) => {
     cliente.query(
-        "select * from clientes ORDER BY ClientedataCadastro DESC",
+        "select * from cliente ORDER BY ClientedataCadastro DESC",
         (err, result) => {
             if (err) console.log(err);
             else res.json(result.rows);
