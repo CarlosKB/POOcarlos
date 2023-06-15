@@ -59,8 +59,8 @@ export default function ClienteFormCadastro() {
         TelefoneNumero: values.telefonenumero,
 
       }).then((response)=>{
-          if(response.data.message === 'Cliente, pet e telefone cadastrados com sucesso.'){
-            Swal.fire("Sucesso!", response.data.message, "success");
+          if(response.data.msg === 'Cliente, pet e telefone cadastrados com sucesso.'){
+            Swal.fire("Sucesso!", 'Cliente, pet e telefone cadastrados com sucesso.', "success");
             limparCampos()
           }
           if(response.data.error === 'Erro ao cadastrar o produto')
