@@ -45,7 +45,7 @@ export default function ServicoListarTabela() {
           <table className="table table-hover table-bordered mt-5">
             <thead>
               <tr>
-                <th scope="col">ID</th>
+
                 <th scope="col">Nome</th>
                 <th scope="col">Valor</th>
               </tr>
@@ -53,7 +53,7 @@ export default function ServicoListarTabela() {
             <tbody className="table-group-divider">
             {servico.map((servico) => (
               <tr key={servico.servicoid}>
-                <td>{servico.servicoid}</td>
+
                 <td>{servico.serviconome}</td>
                 <td>{servico.servicopreco}</td>
               </tr>

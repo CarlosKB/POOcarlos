@@ -45,7 +45,7 @@ export default function ProdutoListarTabela() {
           <table className="table table-hover table-bordered mt-5">
             <thead>
               <tr>
-                <th scope="col">ID</th>
+
                 <th scope="col">Nome</th>
                 <th scope="col">Valor</th>
               </tr>
@@ -53,7 +53,7 @@ export default function ProdutoListarTabela() {
             <tbody className="table-group-divider">
             {produto.map((produto) => (
               <tr key={produto.produtoid}>
-                <td>{produto.produtoid}</td>
+
                 <td>{produto.produtonome}</td>
                 <td>{produto.produtopreco}</td>
               </tr>

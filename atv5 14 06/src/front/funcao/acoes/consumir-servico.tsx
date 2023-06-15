@@ -54,7 +54,7 @@ export default function ConsumirServico() {
 
   const listarServico = () => {
     axios
-      .get("http://localhost:3002/listarServicos")
+      .get("http://localhost:3001/listarServicos")
       .then((response) => {
         setServico(response.data);
       })
@@ -89,7 +89,7 @@ export default function ConsumirServico() {
       const serviconome = servicoSelecionados[0];
   
       axios
-        .post("http://localhost:3002/consumirServico", {
+        .post("http://localhost:3001/consumirServico", {
           clienteCpf: cpf,
           nomeServico: serviconome,
           nomePet: petnome,

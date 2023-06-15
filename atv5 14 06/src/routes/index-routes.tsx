@@ -24,7 +24,7 @@ import ServicoMaisConsumidoPorTipoDashTabela from "../front/funcao/dashboard/pet
 import ServicosMaisConsumidosDashTabela from "../front/funcao/dashboard/servico-dash-mais-consumidos";
 import ProdutosMaisConsumidosDashTabela from "../front/funcao/dashboard/produto-dash-mais-consumidos";
 import TelefoneCadastroForm from "../front/funcao/cadastrar/telefone-cadastro-form";
-
+import TelefoneListarTabela from "../front/funcao/listar/telefone-listar-tabela";
 
 export const Rotas = () => {
     return (
@@ -100,6 +100,9 @@ export const Rotas = () => {
         </Routes>
         <Routes>
             <Route path="/TelefoneCadastroForm" element={<TelefoneCadastroForm />} />
+        </Routes>
+        <Routes>
+            <Route path="/TelefoneListarTabela" element={<TelefoneListarTabela />} />
         </Routes>
         </BrowserRouter>
     )    

@@ -51,7 +51,7 @@ export default function ClienteListarTabela() {
           <table className="table table-hover table-bordered mt-5">
             <thead>
               <tr>
-                <th scope="col">ID</th>
+
                 <th scope="col">Nome</th>
                 <th scope="col">Nome Social</th>
                 <th scope="col">CPF</th>
@@ -64,7 +64,7 @@ export default function ClienteListarTabela() {
             <tbody className="table-group-divider">
               {cliente.map((cliente) => (
               <tr>
-                <td>{cliente.clienteid}</td>
+
                 <td>{cliente.clientenome}</td>
                 <td>{cliente.clientenomesocial}</td>
                 <td>{cliente.clientecpf}</td>

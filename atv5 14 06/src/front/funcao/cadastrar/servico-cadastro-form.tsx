@@ -95,23 +95,7 @@ export default function ServicoFormCadastro() {
           onChange={handleChangeValues}
         />
       </div>
-      <div
-        className="input-group position-relative ms-5"
-        style={{ width: "600px", top: "60px" }}
-      >
-        <span className="input-group-text" id="basic-addon1">
-          *
-        </span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Quantidade consumida"
-          aria-label="Username"
-          aria-describedby="basic-addon1"
-          disabled
 
-        />
-      </div>
       <div
         className="input-group position-relative ms-5"
         style={{ width: "600px", top: "90px", left: "500px" }}

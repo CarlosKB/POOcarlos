@@ -31,6 +31,19 @@ export default function PetFormEdicao() {
         />
       </div>
       <div
+        className="input-group position-relative ms-5"
+        style={{ width: "600px", top: "10px", left: "300px" }}
+      >
+        <button
+          type="button"
+          className="btn btn-info"
+          style={{ width: "200px", marginLeft: "350px" }}
+         
+        >
+          Buscar pet
+        </button>
+      </div>
+      <div
         className="input-group position-relative ms-5 mt-5"
         style={{ width: "600px", top: "30px" }}
       >

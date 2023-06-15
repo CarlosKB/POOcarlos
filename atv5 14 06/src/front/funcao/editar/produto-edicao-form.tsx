@@ -31,6 +31,19 @@ export default function ProdutoFormEdicao() {
         />
       </div>
       <div
+        className="input-group position-relative ms-5"
+        style={{ width: "600px", top: "10px", left: "300px" }}
+      >
+        <button
+          type="button"
+          className="btn btn-info"
+          style={{ width: "200px", marginLeft: "350px" }}
+         
+        >
+          Buscar produto
+        </button>
+      </div>
+      <div
         className="input-group position-relative ms-5 mt-5"
         style={{ width: "600px", top: "30px" }}
       >
@@ -43,22 +56,6 @@ export default function ProdutoFormEdicao() {
           placeholder="Valor do produto"
           aria-label="Username"
           aria-describedby="basic-addon1"
-        />
-      </div>
-      <div
-        className="input-group position-relative ms-5"
-        style={{ width: "600px", top: "60px" }}
-      >
-        <span className="input-group-text" id="basic-addon1">
-          *
-        </span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Quantidade consumida"
-          aria-label="Username"
-          aria-describedby="basic-addon1"
-          disabled
         />
       </div>
       <div

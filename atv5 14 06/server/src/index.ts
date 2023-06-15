@@ -783,7 +783,16 @@ function obterNomeClientePorID(clienteID, callback) {
       }
     });
   });
-  
+  app.get("/getTelefone", (req, res) => {
+    cliente.query("SELECT * FROM clientetelefone", (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ error: "Erro ao obter clientetelefoneid" });
+      } else {
+        res.json(result.rows);
+      }
+    });
+  });
   app.get("/getPetsResponsavel", (req, res) => {
     const { clienteid } = req.query;
   
@@ -906,6 +915,8 @@ app.get("/clientesMaisConsumiramServicosValor", (req, res) => {
   });
 });
 
+
 app.listen(3001, () => {
   console.log("Servidor rodando!");
 });
+

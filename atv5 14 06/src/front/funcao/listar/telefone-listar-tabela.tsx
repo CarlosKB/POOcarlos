@@ -4,32 +4,30 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { useEffect, useState } from "react";
 
-export default function PetListarTabela() {
+export default function TelefoneListarTabela() {
   // listar Pet na tabela
-  interface Pet {
-    petid: string;
+  interface Telefone {
+    telefoneid: string;
     clienteid: string;
-    petnome: string;
-    petraca: string;
-    pettipo: string;
-    petgenero: string;
+    telefoneddd: string;
+    telefonenumero: string;
   }
 
-  const [pet, setPet] = useState<Pet[]>([]);
+  const [telefone, setTelefone] = useState<Telefone[]>([]);
   const [nomeCliente, setNomeCliente] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    listarPet();
+    listarTelefone();
   }, []);
 
-  const listarPet = () => {
+  const listarTelefone = () => {
     axios
-      .get("http://localhost:3001/getPets")
+      .get("http://localhost:3001/getTelefone")
       .then((response) => {
-        setPet(response.data);
-        const promises = response.data.map((pet: Pet) => {
-          return obterNomeCliente(pet.clienteid).then((nomeCliente) => {
-            return { clienteid: pet.clienteid, nomecliente: nomeCliente };
+        setTelefone(response.data);
+        const promises = response.data.map((telefone: Telefone) => {
+          return obterNomeCliente(telefone.clienteid).then((nomeCliente) => {
+            return { clienteid: telefone.clienteid, nomecliente: nomeCliente };
           });
         });
 
@@ -71,7 +69,7 @@ export default function PetListarTabela() {
           className="position-absolute top-20 start-40  mt-4"
           style={{ marginLeft: "600px" }}
         >
-          Listagem de Pets
+          Listagem de telefone
         </h2>
       </div>
       <div
@@ -85,22 +83,18 @@ export default function PetListarTabela() {
         <table className="table table-hover table-bordered mt-5">
           <thead>
             <tr>
-              <th scope="col">Responsável</th>
-              <th scope="col">Nome</th>
-              <th scope="col">Raça</th>
-              <th scope="col">Tipo</th>
-              <th scope="col">Gênero</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">DDD</th>
+              <th scope="col">Telefone</th>
             </tr>
           </thead>
 
           <tbody className="table-group-divider">
-            {pet.map((pet) => (
-              <tr key={pet.petid}>
-                <td>{nomeCliente[pet.clienteid]}</td>
-                <td>{pet.petnome}</td>
-                <td>{pet.petraca}</td>
-                <td>{pet.pettipo}</td>
-                <td>{pet.petgenero}</td>
+            {telefone.map((telefone) => (
+              <tr key={telefone.telefoneid}>
+                <td>{nomeCliente[telefone.clienteid]}</td>
+                <td>{telefone.telefoneddd}</td>
+                <td>{telefone.telefonenumero}</td>
               </tr>
             ))}
           </tbody>

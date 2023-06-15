@@ -31,6 +31,20 @@ export default function ServicoFormEdicao() {
         />
       </div>
       <div
+        className="input-group position-relative ms-5"
+        style={{ width: "600px", top: "10px", left: "300px" }}
+      >
+        <button
+          type="button"
+          className="btn btn-info"
+          style={{ width: "200px", marginLeft: "350px" }}
+         
+        >
+          Buscar serviço
+          
+        </button>
+      </div>
+      <div
         className="input-group position-relative ms-5 mt-5"
         style={{ width: "600px", top: "30px" }}
       >
@@ -43,22 +57,6 @@ export default function ServicoFormEdicao() {
           placeholder="Valor do serviço"
           aria-label="Username"
           aria-describedby="basic-addon1"
-        />
-      </div>
-      <div
-        className="input-group position-relative ms-5"
-        style={{ width: "600px", top: "60px" }}
-      >
-        <span className="input-group-text" id="basic-addon1">
-          *
-        </span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Quantidade consumida"
-          aria-label="Username"
-          aria-describedby="basic-addon1"
-          disabled
         />
       </div>
       <div

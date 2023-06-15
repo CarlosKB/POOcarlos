@@ -133,6 +133,11 @@ export default class Navbar extends Component {
                         serviço
                       </a>
                     </li>
+                    <li>
+                      <a className="dropdown-item" href="/TelefoneListarTabela">
+                        telefone
+                      </a>
+                    </li>
                   </ul>
                 </li>
                 <li className="nav-item dropdown">
