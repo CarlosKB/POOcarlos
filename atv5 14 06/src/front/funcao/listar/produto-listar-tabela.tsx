@@ -1,8 +1,33 @@
+import axios from "axios";
 import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import { useEffect, useState } from "react";
 
 export default function ProdutoListarTabela() {
+    // listar produto na tabela
+    interface Produto {
+      produtoid: string;
+      produtonome: string;
+      produtopreco: string;
+    }
+    const [produto, setProduto] =  useState<Produto[]>([]);
+  
+    useEffect(() => {
+      listarProduto();
+    }, []);
+    
+    const listarProduto = () => {
+      axios
+        .get("http://localhost:3001/listarProdutos")
+        .then((response) => {
+          setProduto(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+    };
   return (
     <div>
       <Navbar />
@@ -20,35 +45,19 @@ export default function ProdutoListarTabela() {
           <table className="table table-hover table-bordered mt-5">
             <thead>
               <tr>
-                <th scope="col">Posição</th>
+                <th scope="col">ID</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Valor</th>
-                <th scope="col">Quantidade Consumida</th>
-                <th scope="col">Perfil</th>
               </tr>
             </thead>
             <tbody className="table-group-divider">
-              <tr>
-                <th scope="row">1</th>
-                <td>Produto 1</td>
-                <td>R$30,00</td>
-                <td>12</td>
-                <td>Visualizar 🔎</td>
+            {produto.map((produto) => (
+              <tr key={produto.produtoid}>
+                <td>{produto.produtoid}</td>
+                <td>{produto.produtonome}</td>
+                <td>{produto.produtopreco}</td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Produto 2</td>
-                <td>R$20,00</td>
-                <td>34</td>
-                <td>Visualizar 🔎</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Produto 3</td>
-                <td>R$127,00</td>
-                <td>15</td>
-                <td>Visualizar 🔎</td>
-              </tr>
+              ))}
             </tbody>
           </table>
         </div>

@@ -1,8 +1,33 @@
+import axios from "axios";
 import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import { useEffect, useState } from "react";
 
 export default function ServicoListarTabela() {
+    // listar servico na tabela
+    interface Servico {
+      servicoid: string;
+      serviconome: string;
+      servicopreco: string;
+    }
+    const [servico, setServico] =  useState<Servico[]>([]);
+  
+    useEffect(() => {
+      listarServico();
+    }, []);
+    
+    const listarServico = () => {
+      axios
+        .get("http://localhost:3001/listarServicos")
+        .then((response) => {
+          setServico(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+    };
   return (
     <div>
       <Navbar />
@@ -20,35 +45,19 @@ export default function ServicoListarTabela() {
           <table className="table table-hover table-bordered mt-5">
             <thead>
               <tr>
-                <th scope="col">Posição</th>
+                <th scope="col">ID</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Valor</th>
-                <th scope="col">Quantidade Consumida</th>
-                <th scope="col">Perfil</th>
               </tr>
             </thead>
             <tbody className="table-group-divider">
-              <tr>
-                <th scope="row">1</th>
-                <td>Serviço 1</td>
-                <td>R$30,00</td>
-                <td>12</td>
-                <td>Visualizar 🔎</td>
+            {servico.map((servico) => (
+              <tr key={servico.servicoid}>
+                <td>{servico.servicoid}</td>
+                <td>{servico.serviconome}</td>
+                <td>{servico.servicopreco}</td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Serviço 2</td>
-                <td>R$20,00</td>
-                <td>34</td>
-                <td>Visualizar 🔎</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Serviço 3</td>
-                <td>R$127,00</td>
-                <td>15</td>
-                <td>Visualizar 🔎</td>
-              </tr>
+              ))}
             </tbody>
           </table>
         </div>

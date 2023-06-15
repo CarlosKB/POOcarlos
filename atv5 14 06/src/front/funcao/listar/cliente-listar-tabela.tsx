@@ -1,8 +1,39 @@
+import axios from "axios";
 import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import { useEffect, useState } from "react";
 
 export default function ClienteListarTabela() {
+   // listar produto na tabela
+   interface Cliente {
+    clienteid: string;
+    clientenomesocial: string;
+    clientecpf: string;
+    clientecpfdataemissao: string;
+    clienterg: string;
+    clientergdataemissao: string;
+    clientedatacadastro: string;
+    clientenome: string;
+  }
+  const [cliente, setCliente] =  useState<Cliente[]>([]);
+
+  useEffect(() => {
+    listarCliente();
+  }, []);
+  console.log(cliente);
+  
+  const listarCliente = () => {
+    axios
+      .get("http://localhost:3001/getClientes")
+      .then((response) => {
+        setCliente(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+  };
   return (
     <div>
       <Navbar />
@@ -20,31 +51,29 @@ export default function ClienteListarTabela() {
           <table className="table table-hover table-bordered mt-5">
             <thead>
               <tr>
-                <th scope="col">Posição</th>
+                <th scope="col">ID</th>
                 <th scope="col">Nome</th>
+                <th scope="col">Nome Social</th>
                 <th scope="col">CPF</th>
-                <th scope="col">Perfil</th>
+                <th scope="col">CPF data emissão</th>
+                <th scope="col">RG</th>
+                <th scope="col">RG data emissão</th>
+                <th scope="col">Data cadastro</th>
               </tr>
             </thead>
             <tbody className="table-group-divider">
+              {cliente.map((cliente) => (
               <tr>
-                <th scope="row">1</th>
-                <td>Cliente 1</td>
-                <td>123.456.789-xx</td>
-                <td>Visualizar 🔎</td>
+                <td>{cliente.clienteid}</td>
+                <td>{cliente.clientenome}</td>
+                <td>{cliente.clientenomesocial}</td>
+                <td>{cliente.clientecpf}</td>
+                <td>{cliente.clientecpfdataemissao}</td>
+                <td>{cliente.clienterg}</td>
+                <td>{cliente.clientergdataemissao}</td>
+                <td>{cliente.clientedatacadastro}</td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Cliente 3</td>
-                <td>123.456.789-xx</td>
-                <td>Visualizar 🔎</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Cliente 3</td>
-                <td>123.456.789-xx</td>
-                <td>Visualizar 🔎</td>
-              </tr>
+              ))}
             </tbody>
           </table>
         </div>
