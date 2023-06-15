@@ -1,0 +1,62 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE Cliente (
+    ClienteID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ClienteNomeSocial VARCHAR(255),
+    ClienteCPF VARCHAR(11),
+    ClienteCPFDataEmissao VARCHAR(30),
+    ClienteRG VARCHAR(20),
+    ClienteRGDataEmissao VARCHAR(30),
+    ClientedataCadastro VARCHAR(30),
+    ClienteNome VARCHAR(255) -- Novo campo adicionado
+);
+
+CREATE TABLE ClienteTelefone (
+    ClienteTelefoneID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ClienteID UUID,
+    TelefoneDDD VARCHAR(3),
+    TelefoneNumero VARCHAR(9),
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID)
+);
+
+CREATE TABLE Pets (
+    PetID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ClienteID UUID,
+    PetNome VARCHAR(255),
+    PetRaca VARCHAR(255),
+    PetTipo VARCHAR(255),
+    PetGenero VARCHAR(255),
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID)
+);
+
+CREATE TABLE Produto (
+    ProdutoID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ProdutoNome VARCHAR(255),
+    ProdutoPreco DECIMAL(10, 2)
+);
+
+CREATE TABLE Servico (
+    ServicoID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ServicoNome VARCHAR(255),
+    ServicoPreco DECIMAL(10, 2)
+);
+
+CREATE TABLE ProdutosConsumidosCliente (
+    ProdutosConsumidosClienteID UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- Novo campo adicionado
+    ProdutoID UUID,
+    ClienteID UUID,
+    PetID UUID,
+    FOREIGN KEY (ProdutoID) REFERENCES Produto(ProdutoID),
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
+    FOREIGN KEY (PetID) REFERENCES Pets(PetID)
+);
+
+CREATE TABLE ServicoConsumidosCliente (
+    ServicoConsumidosClienteID UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- Novo campo adicionado
+    ServicoID UUID,
+    ClienteID UUID,
+    PetID UUID,
+    FOREIGN KEY (ServicoID) REFERENCES Servico(ServicoID),
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
+    FOREIGN KEY (PetID) REFERENCES Pets(PetID)
+);
