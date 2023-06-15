@@ -42,7 +42,7 @@ function ServicosMaisConsumidosDashTabela() {
             <table className="table table-hover table-bordered mt-5 border border-primary-subtle rounded-2">
             <thead>
             <tr>
-              <th scope="col">Nome do produto</th>
+              <th scope="col">Nome do serviço</th>
               <th scope="col">Quantidade</th>
             </tr>
           </thead>

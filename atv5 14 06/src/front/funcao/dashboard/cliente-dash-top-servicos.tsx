@@ -2,9 +2,33 @@ import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Component } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-export default class ClienteTopServicosDashTabela extends Component {
-  render(){
+
+interface ClienteMaisConsumiramServico {
+  clienteID: String;
+  clientenomesocial: string;
+  total_servicos_consumidos: string;
+}
+function ClienteTopServicosDashTabela() {
+  
+  const [ClienteMaisConsumiramServico, setClienteMaisConsumiuServicos] = useState<ClienteMaisConsumiramServico[]>([]);
+
+  useEffect(() => {
+    listarProdutosMaisConsumidos();
+  }, []);
+
+  const listarProdutosMaisConsumidos = () => {
+    axios.get("http://localhost:3001/clientesMaisConsumiramServicosQTD")
+      .then((response) => {
+        setClienteMaisConsumiuServicos(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <div>
       <Navbar />
@@ -18,38 +42,25 @@ export default class ClienteTopServicosDashTabela extends Component {
         </div>
         <div style={{marginTop: "100px", width: "1000px", marginLeft: "250px", borderRadius: "50px"}}>
           <table className="table table-hover table-bordered mt-5 border border-primary-subtle rounded-2">
-            <thead>
+          <thead>
+            <tr>
+              <th scope="col">Cliente</th>
+              <th scope="col">Quantidade de servico</th>
+            </tr>
+          </thead>
+          <tbody className="table-group-divider">
+            {ClienteMaisConsumiramServico.map((ClienteMaisConsumiramServico) => (
               <tr>
-                <th scope="col">Posição</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Serviços</th>
-                <th scope="col">Quantidade</th>
+                <td>{ClienteMaisConsumiramServico.clientenomesocial}</td>
+                <td>{ClienteMaisConsumiramServico.total_servicos_consumidos}</td>
               </tr>
-            </thead>
-            <tbody className="table-group-divider">
-              <tr>
-                <th scope="row">1</th>
-                <td>Cliente 1</td>
-                <td>a</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Cliente 3</td>
-                <td>b</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Cliente 3</td>
-                <td>c</td>
-                <td>1</td>
-              </tr>
-            </tbody>
+            ))}
+          </tbody>
           </table>
         </div>
       </div>
     
   );
 }
-}
+
+export default ClienteTopServicosDashTabela;

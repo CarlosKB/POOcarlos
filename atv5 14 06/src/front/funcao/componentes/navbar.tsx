@@ -182,7 +182,17 @@ export default class Navbar extends Component {
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ClienteTopServicosDashTabela">
-                      Clientes + consumiram serviço
+                        Clientes + consumiram serviços
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="/ClienteTopProdutosDashTabelaValor">
+                        Clientes + consumiram produtos em valor
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="/ClienteTopServicosDashTabelaValor">
+                        Clientes + consumiram serviços em valor
                       </a>
                     </li>
                     <li>
@@ -192,7 +202,7 @@ export default class Navbar extends Component {
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ServicoMaisConsumidoPorRacaDashTabela">
-                       Serviços consumidos por raça
+                        Serviços consumidos por raça
                       </a>
                     </li>
                     <li>
@@ -207,16 +217,16 @@ export default class Navbar extends Component {
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ProdutosMaisConsumidosDashTabela">
-                        Produtos mais consumidos 
+                        Produtos mais consumidos
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ServicosMaisConsumidosDashTabela">
-                       Serviços mais consumidos
+                        Serviços mais consumidos
                       </a>
                     </li>
                   </ul>
-                  
+
                 </li>
               </ul>
             </div>

@@ -868,6 +868,32 @@ app.get("/clientesMaisConsumiramProdutosQTD", (req, res) => {
   });
 });
 
+app.get("/clientesMaisConsumiramProdutosListaNomeProdutoQTD", (req, res) => {
+  const quantidade = req.body.quantidade || 10; // Número padrão de clientes a serem exibidos
+
+  const SQL = `
+    SELECT c.ClienteID, c.ClienteNomeSocial, p.ProdutoNome, COUNT(pc.ProdutoID) AS quantidade
+    FROM Cliente c
+    LEFT JOIN ProdutosConsumidosCliente pc ON c.ClienteID = pc.ClienteID
+    LEFT JOIN Produto p ON pc.ProdutoID = p.ProdutoID
+    GROUP BY c.ClienteID, c.ClienteNomeSocial, p.ProdutoNome
+    ORDER BY quantidade DESC
+    LIMIT $1;
+  `;
+
+  cliente.query(SQL, [quantidade], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Erro ao recuperar os clientes que mais consumiram produtos.",
+      });
+    } else {
+      res.json(result.rows);
+    }
+  });
+});
+
+
 app.get("/clientesMaisConsumiramServicosQTD", (req, res) => {
   const quantidade = req.body.quantidade || 10; // Número padrão de clientes a serem exibidos
 

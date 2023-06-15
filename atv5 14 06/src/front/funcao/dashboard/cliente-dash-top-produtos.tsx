@@ -1,10 +1,34 @@
 import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import { Component } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-export default class ClienteTopProdutosDashTabela extends Component {
-  render(){
+
+interface ClienteMaisConsumiramProdutos {
+  clienteID: String;
+  clientenomesocial: string;
+  total_produtos_consumidos: string;
+}
+
+function ClienteTopProdutosDashTabela() {
+
+  const [ClienteMaisConsumiramProdutos, setClienteMaisConsumiuProdutos] = useState<ClienteMaisConsumiramProdutos[]>([]);
+
+  useEffect(() => {
+    listarProdutosMaisConsumidos();
+  }, []);
+
+  const listarProdutosMaisConsumidos = () => {
+    axios.get("http://localhost:3001/clientesMaisConsumiramProdutosQTD")
+      .then((response) => {
+        setClienteMaisConsumiuProdutos(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <div>
       <Navbar />
@@ -18,38 +42,25 @@ export default class ClienteTopProdutosDashTabela extends Component {
         </div>
         <div style={{marginTop: "100px", width: "1000px", marginLeft: "250px", borderRadius: "50px"}}>
           <table className="table table-hover table-bordered mt-5 border border-primary-subtle rounded-2">
-            <thead>
+          <thead>
+            <tr>
+              <th scope="col">Cliente</th>
+              <th scope="col">Quantidade de produtos</th>
+            </tr>
+          </thead>
+          <tbody className="table-group-divider">
+            {ClienteMaisConsumiramProdutos.map((ClienteMaisConsumiramProdutos) => (
               <tr>
-                <th scope="col">Posição</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Produto</th>
-                <th scope="col">Quantidade</th>
+                <td>{ClienteMaisConsumiramProdutos.clientenomesocial}</td>
+                <td>{ClienteMaisConsumiramProdutos.total_produtos_consumidos}</td>
               </tr>
-            </thead>
-            <tbody className="table-group-divider">
-              <tr>
-                <th scope="row">1</th>
-                <td>Cliente 1</td>
-                <td>a</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Cliente 3</td>
-                <td>b</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Cliente 3</td>
-                <td>c</td>
-                <td>1</td>
-              </tr>
-            </tbody>
+            ))}
+          </tbody>
           </table>
         </div>
       </div>
     
   );
 }
-}
+
+export default ClienteTopProdutosDashTabela;
