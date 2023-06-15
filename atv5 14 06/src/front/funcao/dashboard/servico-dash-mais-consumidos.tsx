@@ -1,10 +1,32 @@
 import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import { Component } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-export default class ServicosMaisConsumidosDashTabela extends Component {
-  render(){
+
+interface ServicoMaisConsumido {
+  serviconome: string;
+  quantidade: string;
+}
+
+function ServicosMaisConsumidosDashTabela() {
+
+  const [ServicoMaisConsumido, setServicoMC] = useState<ServicoMaisConsumido[]>([]);
+
+  useEffect(() => {
+    listarProdutosMaisConsumidos();
+  }, []);
+
+  const listarProdutosMaisConsumidos = () => {
+    axios.get("http://localhost:3001/listarServicosMaisConsumidos")
+      .then((response) => {
+        setServicoMC(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
     return (
       <div>
         <Navbar />
@@ -18,34 +40,25 @@ export default class ServicosMaisConsumidosDashTabela extends Component {
           </div>
           <div style={{marginTop: "100px", width: "1000px", marginLeft: "250px", borderRadius: "50px"}}>
             <table className="table table-hover table-bordered mt-5 border border-primary-subtle rounded-2">
-              <thead>
-                <tr>
-                  <th scope="col">Posição</th>
-                  <th scope="col">Serviço</th>
-                  <th scope="col">Quantidade</th>
-                </tr>
-              </thead>
-              <tbody className="table-group-divider">
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Servico 1</td>
-                  <td>3</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Servico 2</td>
-                  <td>2</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Servico 3</td>
-                  <td>1</td>
-                </tr>
-              </tbody>
+            <thead>
+            <tr>
+              <th scope="col">Nome do produto</th>
+              <th scope="col">Quantidade</th>
+            </tr>
+          </thead>
+          <tbody className="table-group-divider">
+            {ServicoMaisConsumido.map((ServicoMaisConsumido) => (
+              <tr>
+                <td>{ServicoMaisConsumido.serviconome}</td>
+                <td>{ServicoMaisConsumido.quantidade}</td>
+              </tr>
+            ))}
+          </tbody>
             </table>
           </div>
         </div>
       
     );
-  }
 }
+
+export default ServicosMaisConsumidosDashTabela;

@@ -157,7 +157,7 @@ function recuperarClienteServicoPetID(
         console.log(err);
         callback(err);
       } else {
-        console.log(result.rows);
+        // console.log(result.rows);
         callback(null, result.rows);
       }
     }
@@ -182,7 +182,7 @@ function recuperarClienteProdutoPetID(
         console.log(err);
         callback(err);
       } else {
-        console.log(result.rows);
+        // console.log(result.rows);
         callback(null, result.rows);
       }
     }
@@ -443,6 +443,25 @@ function listarProdutosMaisConsumidos(callback) {
   );
 }
 
+function listarServicosMaisConsumidos(callback) {
+  cliente.query(
+    `SELECT s.ServicoNome, COUNT(*) AS Quantidade
+      FROM Servico s
+      JOIN ServicoConsumidosCliente sc ON s.ServicoID = sc.ServicoID
+      GROUP BY s.ServicoNome
+      ORDER BY Quantidade DESC`,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        callback(err);
+      } else {
+        callback(null, result.rows);
+      }
+    }
+  );
+}
+
+
 function cadastrarProduto(nomeProduto, precoProduto, callback) {
   cliente.query(
     "INSERT INTO Produto (ProdutoNome, ProdutoPreco) VALUES ($1, $2)",
@@ -505,6 +524,16 @@ app.get("/produtosMaisConsumidos", (req, res) => {
         .json({ error: "Erro ao listar produtos mais consumidos" });
     } else {
       res.json(produtos);
+    }
+  });
+});
+
+app.get('/listarServicosMaisConsumidos', (req, res) => {
+  listarServicosMaisConsumidos((err, result) => {
+    if (err) {
+      res.status(500).json({ error: 'Erro ao obter os serviços mais consumidos' });
+    } else {
+      res.json(result);
     }
   });
 });
@@ -644,7 +673,7 @@ app.get("/listarPetsPorCPF", (req, res) => {
       res.status(500).json({ error: "Erro ao listar os pets" });
     } else {
       res.json(pets);
-      console.log(pets);
+      // console.log(pets);
     }
   });
 });
