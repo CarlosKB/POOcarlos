@@ -1,10 +1,33 @@
 import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import { Component } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-export default class ProdutosMaisConsumidosDashTabela extends Component {
-  render(){
+export default function ProdutosMaisConsumidosDashTabela() {
+
+     interface ProdutoMaisConsumido {
+    produtonome: string;
+    quantidade: string;
+
+  }
+  const [ProdutoMaisConsumido, setProdutoMC] =  useState<ProdutoMaisConsumido[]>([]);
+
+  useEffect(() => {
+    listarProdutosMaisConsumidos();
+  }, []);
+  console.log(ProdutoMaisConsumido);
+  
+  const listarProdutosMaisConsumidos = () => {
+    axios.get("http://localhost:3001/produtosMaisConsumidos")
+      .then((response) => {
+        setProdutoMC(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+
     return (
       <div>
         <Navbar />
@@ -18,30 +41,20 @@ export default class ProdutosMaisConsumidosDashTabela extends Component {
           </div>
           <div style={{marginTop: "100px", width: "1000px", marginLeft: "250px", borderRadius: "50px"}}>
             <table className="table table-hover table-bordered mt-5 border border-primary-subtle rounded-2">
-              <thead>
-                <tr>
-                  <th scope="col">Posição</th>
-                  <th scope="col">Produto</th>
-                  <th scope="col">Quantidade</th>
-                </tr>
-              </thead>
+            <thead>
+              <tr>
+                <th scope="col">Nome do produto</th>
+                <th scope="col">Quantidade</th>
+              </tr>
+            </thead>
               <tbody className="table-group-divider">
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Produto 1</td>
-                  <td>3</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Produto 3</td>
-                  <td>2</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Produto 3</td>
-                  <td>1</td>
-                </tr>
-              </tbody>
+              {ProdutoMaisConsumido.map((ProdutoMaisConsumido) => (
+              <tr>
+                <td>{ProdutoMaisConsumido.produtonome}</td>
+                <td>{ProdutoMaisConsumido.quantidade}</td>
+              </tr>
+              ))}
+            </tbody>
             </table>
           </div>
         </div>
