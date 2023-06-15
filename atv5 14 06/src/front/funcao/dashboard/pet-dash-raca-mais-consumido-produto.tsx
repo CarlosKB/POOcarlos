@@ -1,10 +1,33 @@
 import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import { Component } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-export default class ProdutoMaisConsumidoPorRacaDashTabela extends Component {
-  render() {
+interface ProdutoMaisConsumidoPorRaca {
+  petraca: String;
+  produtonome: string;
+  quantidade: string;
+}
+
+function ProdutoMaisConsumidoPorRacaDashTabela() {
+
+  const [ProdutoMaisConsumidoPorRaca, setProdutoMaisConsumidoPorRaca] = useState<ProdutoMaisConsumidoPorRaca[]>([]);
+
+  useEffect(() => {
+    listarProdutosMaisConsumidos();
+  }, []);
+
+  const listarProdutosMaisConsumidos = () => {
+    axios.get("http://localhost:3001/produtosMaisConsumidosPorRacaPet")
+      .then((response) => {
+        setProdutoMaisConsumidoPorRaca(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
     return (
       <div>
         <Navbar />
@@ -25,37 +48,26 @@ export default class ProdutoMaisConsumidoPorRacaDashTabela extends Component {
           }}
         >
           <table className="table table-hover table-bordered mt-5 border border-primary-subtle rounded-2">
-            <thead>
+          <thead>
+            <tr>
+              <th scope="col">Raça do pet</th>
+              <th scope="col">Produto</th>
+              <th scope="col">Quantidade</th>
+            </tr>
+          </thead>
+          <tbody className="table-group-divider">
+            {ProdutoMaisConsumidoPorRaca.map((ProdutoMaisConsumidoPorRaca) => (
               <tr>
-                <th scope="col">Posição</th>
-                <th scope="col">Raca</th>
-                <th scope="col">Produto</th>
-                <th scope="col">Quantidade</th>
+                <td>{ProdutoMaisConsumidoPorRaca.petraca}</td>
+                <td>{ProdutoMaisConsumidoPorRaca.produtonome}</td>
+                <td>{ProdutoMaisConsumidoPorRaca.quantidade}</td>
               </tr>
-            </thead>
-            <tbody className="table-group-divider">
-              <tr>
-                <th scope="row">1</th>
-                <td>Cliente 1</td>
-                <td>a</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Cliente 3</td>
-                <td>b</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Cliente 3</td>
-                <td>c</td>
-                <td>1</td>
-              </tr>
-            </tbody>
+            ))}
+          </tbody>
           </table>
         </div>
       </div>
     );
   }
-}
+
+export default ProdutoMaisConsumidoPorRacaDashTabela;

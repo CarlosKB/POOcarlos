@@ -313,68 +313,68 @@ function listarServicosMaisConsumidosPorRaca(raca, callback) {
   );
 }
 
-function listarProdutosMaisConsumidosPorRaca(racaPet, callback) {
-  cliente.query(
-    `SELECT p.ProdutoNome, COUNT(*) AS Quantidade
-      FROM Produto p
-      JOIN ProdutosConsumidosCliente pc ON p.ProdutoID = pc.ProdutoID
-      JOIN Pets pt ON pc.PetID = pt.PetID
-      WHERE pt.PetRaca = $1
-      GROUP BY p.ProdutoNome
-      ORDER BY Quantidade DESC`,
-    [racaPet],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        callback(err);
-      } else {
-        callback(null, result.rows);
-      }
-    }
-  );
-}
+// function listarProdutosMaisConsumidosPorRaca(racaPet, callback) {
+//   cliente.query(
+//     `SELECT p.ProdutoNome, COUNT(*) AS Quantidade
+//       FROM Produto p
+//       JOIN ProdutosConsumidosCliente pc ON p.ProdutoID = pc.ProdutoID
+//       JOIN Pets pt ON pc.PetID = pt.PetID
+//       WHERE pt.PetRaca = $1
+//       GROUP BY p.ProdutoNome
+//       ORDER BY Quantidade DESC`,
+//     [racaPet],
+//     (err, result) => {
+//       if (err) {
+//         console.log(err);
+//         callback(err);
+//       } else {
+//         callback(null, result.rows);
+//       }
+//     }
+//   );
+// }
 
-function listarProdutosMaisConsumidosPorTipoPet(tipoPet, callback) {
-  cliente.query(
-    `SELECT p.ProdutoNome, COUNT(*) AS Quantidade
-      FROM Produto p
-      JOIN ProdutosConsumidosCliente pc ON p.ProdutoID = pc.ProdutoID
-      JOIN Pets pt ON pc.PetID = pt.PetID
-      WHERE pt.PetTipo = $1
-      GROUP BY p.ProdutoNome
-      ORDER BY Quantidade DESC`,
-    [tipoPet],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        callback(err);
-      } else {
-        callback(null, result.rows);
-      }
-    }
-  );
-}
+// function listarProdutosMaisConsumidosPorTipoPet(tipoPet, callback) {
+//   cliente.query(
+//     `SELECT p.ProdutoNome, COUNT(*) AS Quantidade
+//       FROM Produto p
+//       JOIN ProdutosConsumidosCliente pc ON p.ProdutoID = pc.ProdutoID
+//       JOIN Pets pt ON pc.PetID = pt.PetID
+//       WHERE pt.PetTipo = $1
+//       GROUP BY p.ProdutoNome
+//       ORDER BY Quantidade DESC`,
+//     [tipoPet],
+//     (err, result) => {
+//       if (err) {
+//         console.log(err);
+//         callback(err);
+//       } else {
+//         callback(null, result.rows);
+//       }
+//     }
+//   );
+// }
 
-function listarServicosMaisConsumidosPorTipoPet(tipoPet, callback) {
-  cliente.query(
-    `SELECT s.ServicoNome, COUNT(*) AS Quantidade
-      FROM Servico s
-      JOIN ServicosConsumidosCliente sc ON s.ServicoID = sc.ServicoID
-      JOIN Pets p ON sc.PetID = p.PetID
-      WHERE p.PetTipo = $1
-      GROUP BY s.ServicoNome
-      ORDER BY Quantidade DESC`,
-    [tipoPet],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        callback(err);
-      } else {
-        callback(null, result.rows);
-      }
-    }
-  );
-}
+// function listarServicosMaisConsumidosPorTipoPet(tipoPet, callback) {
+//   cliente.query(
+//     `SELECT s.ServicoNome, COUNT(*) AS Quantidade
+//       FROM Servico s
+//       JOIN ServicosConsumidosCliente sc ON s.ServicoID = sc.ServicoID
+//       JOIN Pets p ON sc.PetID = p.PetID
+//       WHERE p.PetTipo = $1
+//       GROUP BY s.ServicoNome
+//       ORDER BY Quantidade DESC`,
+//     [tipoPet],
+//     (err, result) => {
+//       if (err) {
+//         console.log(err);
+//         callback(err);
+//       } else {
+//         callback(null, result.rows);
+//       }
+//     }
+//   );
+// }
 
 function cadastrarPetPorCpf(
   nomePet,
@@ -492,6 +492,96 @@ function cadastrarServico(nomeServico, precoServico, callback) {
   );
 }
 
+app.get("/produtosMaisConsumidosPorTipoPet", (req, res) => {
+  const SQL = `
+    SELECT p.PetTipo, pr.ProdutoNome, COUNT(*) AS quantidade
+    FROM Pets p
+    JOIN ProdutosConsumidosCliente pc ON p.PetID = pc.PetID
+    JOIN Produto pr ON pc.ProdutoID = pr.ProdutoID
+    GROUP BY p.PetTipo, pr.ProdutoNome
+    ORDER BY quantidade DESC;
+  `;
+
+  cliente.query(SQL, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Erro ao recuperar os produtos mais consumidos por tipo de pet.",
+      });
+    } else {
+      res.json(result.rows);
+    }
+  });
+});
+
+app.get("/produtosMaisConsumidosPorRacaPet", (req, res) => {
+  const SQL = `
+    SELECT p.PetRaca, pr.ProdutoNome, COUNT(*) AS quantidade
+    FROM Pets p
+    JOIN ProdutosConsumidosCliente pc ON p.PetID = pc.PetID
+    JOIN Produto pr ON pc.ProdutoID = pr.ProdutoID
+    GROUP BY p.PetRaca, pr.ProdutoNome
+    ORDER BY quantidade DESC;
+  `;
+
+  cliente.query(SQL, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Erro ao recuperar os produtos mais consumidos por raça de pet.",
+      });
+    } else {
+      res.json(result.rows);
+    }
+  });
+});
+
+app.get("/servicosMaisConsumidosPorRacaPet", (req, res) => {
+  const SQL = `
+    SELECT p.PetRaca, s.ServicoNome, COUNT(*) AS quantidade
+    FROM Pets p
+    JOIN ServicoConsumidosCliente sc ON p.PetID = sc.PetID
+    JOIN Servico s ON sc.ServicoID = s.ServicoID
+    GROUP BY p.PetRaca, s.ServicoNome
+    ORDER BY quantidade DESC;
+  `;
+
+  cliente.query(SQL, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Erro ao recuperar os serviços mais consumidos por raça de pet.",
+      });
+    } else {
+      res.json(result.rows);
+    }
+  });
+});
+
+app.get("/servicosMaisConsumidosPorTipoPet", (req, res) => {
+  const SQL = `
+    SELECT p.PetTipo, s.ServicoNome, COUNT(*) AS quantidade
+    FROM Pets p
+    JOIN ServicoConsumidosCliente sc ON p.PetID = sc.PetID
+    JOIN Servico s ON sc.ServicoID = s.ServicoID
+    GROUP BY p.PetTipo, s.ServicoNome
+    ORDER BY quantidade DESC;
+  `;
+
+  cliente.query(SQL, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Erro ao recuperar os serviços mais consumidos por tipo de pet.",
+      });
+    } else {
+      res.json(result.rows);
+    }
+  });
+});
+
+
+
 app.post("/cadastrarServico", (req, res) => {
   const { nomeServico, precoServico } = req.body;
 
@@ -569,61 +659,61 @@ app.post("/cadastrarPetPorCPF", (req, res) => {
   );
 });
 
-app.get("/servicosMaisConsumidosPorRaca", (req, res) => {
-  const { raca } = req.body;
+// app.get("/servicosMaisConsumidosPorRaca", (req, res) => {
+//   const { raca } = req.body;
 
-  listarServicosMaisConsumidosPorRaca(raca, (err, result) => {
-    if (err) {
-      res
-        .status(500)
-        .json({ error: "Erro ao obter os serviços mais consumidos por raça" });
-    } else {
-      res.json(result);
-    }
-  });
-});
+//   listarServicosMaisConsumidosPorRaca(raca, (err, result) => {
+//     if (err) {
+//       res
+//         .status(500)
+//         .json({ error: "Erro ao obter os serviços mais consumidos por raça" });
+//     } else {
+//       res.json(result);
+//     }
+//   });
+// });
 
-app.get("/servicosMaisConsumidosPorTipoPet/:tipoPet", (req, res) => {
-  const tipoPet = req.params.tipoPet;
+// app.get("/servicosMaisConsumidosPorTipoPet/:tipoPet", (req, res) => {
+//   const tipoPet = req.params.tipoPet;
 
-  listarServicosMaisConsumidosPorTipoPet(tipoPet, (err, result) => {
-    if (err) {
-      res.status(500).json({
-        error: "Erro ao listar serviços mais consumidos por tipo de pet",
-      });
-    } else {
-      res.json(result);
-    }
-  });
-});
+//   listarServicosMaisConsumidosPorTipoPet(tipoPet, (err, result) => {
+//     if (err) {
+//       res.status(500).json({
+//         error: "Erro ao listar serviços mais consumidos por tipo de pet",
+//       });
+//     } else {
+//       res.json(result);
+//     }
+//   });
+// });
 
-app.get("/produtosMaisConsumidosPorTipoPet", (req, res) => {
-  const { tipoPet } = req.body;
+// app.get("/produtosMaisConsumidosPorTipoPet", (req, res) => {
+//   const { tipoPet } = req.body;
 
-  listarProdutosMaisConsumidosPorTipoPet(tipoPet, (err, result) => {
-    if (err) {
-      res.status(500).json({
-        error: "Erro ao listar produtos mais consumidos por tipo de pet",
-      });
-    } else {
-      res.json(result);
-    }
-  });
-});
+//   listarProdutosMaisConsumidosPorTipoPet(tipoPet, (err, result) => {
+//     if (err) {
+//       res.status(500).json({
+//         error: "Erro ao listar produtos mais consumidos por tipo de pet",
+//       });
+//     } else {
+//       res.json(result);
+//     }
+//   });
+// });
 
-app.get("/produtosMaisConsumidosPorRaca", (req, res) => {
-  const { raca } = req.body;
+// app.get("/produtosMaisConsumidosPorRaca", (req, res) => {
+//   const { raca } = req.body;
 
-  listarProdutosMaisConsumidosPorRaca(raca, (err, result) => {
-    if (err) {
-      res
-        .status(500)
-        .json({ error: "Erro ao listar produtos mais consumidos por raça" });
-    } else {
-      res.json(result);
-    }
-  });
-});
+//   listarProdutosMaisConsumidosPorRaca(raca, (err, result) => {
+//     if (err) {
+//       res
+//         .status(500)
+//         .json({ error: "Erro ao listar produtos mais consumidos por raça" });
+//     } else {
+//       res.json(result);
+//     }
+//   });
+// });
 
 app.get("/listarProdutos", (req, res) => {
   listarProdutos((err, produtos) => {
