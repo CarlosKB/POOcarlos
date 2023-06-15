@@ -121,6 +121,11 @@ export default class Navbar extends Component {
                       </a>
                     </li>
                     <li>
+                      <a className="dropdown-item" href="/TelefoneListarTabela">
+                        telefone
+                      </a>
+                    </li>
+                    <li>
                       <hr className="dropdown-divider" />
                     </li>
                     <li>
@@ -131,11 +136,6 @@ export default class Navbar extends Component {
                     <li>
                       <a className="dropdown-item" href="/ServicoListarTabela">
                         serviço
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="/TelefoneListarTabela">
-                        telefone
                       </a>
                     </li>
                   </ul>
@@ -177,42 +177,42 @@ export default class Navbar extends Component {
                   <ul className="dropdown-menu">
                     <li>
                       <a className="dropdown-item" href="/ClienteTopProdutosDashTabela">
-                        Clientes + consumiram produtos
+                        Clientes que mais consumiram produtos
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ClienteTopServicosDashTabela">
-                        Clientes + consumiram serviços
+                        Clientes que mais consumiram serviços
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ClienteTopProdutosDashTabelaValor">
-                        Clientes + consumiram produtos em valor
+                        Clientes que mais consumiram produtos em valor
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ClienteTopServicosDashTabelaValor">
-                        Clientes + consumiram serviços em valor
+                        Clientes que mais consumiram serviços em valor
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ProdutoMaisConsumidoPorRacaDashTabela">
-                        Produtos consumidos por raça
+                        Produtos mais consumidos por raça
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ServicoMaisConsumidoPorRacaDashTabela">
-                        Serviços consumidos por raça
+                        Serviços mais consumidos por raça
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ProdutoMaisConsumidoPorTipoDashTabela">
-                        Produtos + condumidos por tipo
+                        Produtos mais consumidos por tipo
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="/ServicoMaisConsumidoPorTipoDashTabela">
-                        Serviços + consumidos por tipo
+                        Serviços mais consumidos por tipo
                       </a>
                     </li>
                     <li>
