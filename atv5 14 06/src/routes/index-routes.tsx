@@ -27,6 +27,8 @@ import TelefoneCadastroForm from "../front/funcao/cadastrar/telefone-cadastro-fo
 import TelefoneListarTabela from "../front/funcao/listar/telefone-listar-tabela";
 import ClienteTopProdutosDashTabelaValor from "../front/funcao/dashboard/cliente-dash-top-produtosValor";
 import ClienteTopServicosDashTabelaValor from "../front/funcao/dashboard/cliente-dash-top-servicosValor";
+import ProdutosMaisConsumidosPorCPF from "../front/funcao/dashboard/produto-dash-mais-consumidosPorCPF";
+import ServicosMaisConsumidosPorCPF from "../front/funcao/dashboard/servico-dash-mais-consumidosPorCPF";
 
 export const Rotas = () => {
     return (
@@ -111,6 +113,12 @@ export const Rotas = () => {
         </Routes>
         <Routes>
             <Route path="/ClienteTopServicosDashTabelaValor" element={<ClienteTopServicosDashTabelaValor/>} />
+        </Routes>
+        <Routes>
+            <Route path="/ProdutosMaisConsumidosPorCPF" element={<ProdutosMaisConsumidosPorCPF/>} />
+        </Routes>
+        <Routes>
+            <Route path="/ServicosMaisConsumidosPorCPF" element={<ServicosMaisConsumidosPorCPF/>} />
         </Routes>
         </BrowserRouter>
     )    

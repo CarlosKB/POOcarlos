@@ -225,8 +225,17 @@ export default class Navbar extends Component {
                         Serviços mais consumidos
                       </a>
                     </li>
+                    <li>
+                      <a className="dropdown-item" href="/ProdutosMaisConsumidosPorCPF">
+                        Produtos mais consumidos por cliente
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="/ServicosMaisConsumidosPorCPF">
+                        Serviços mais consumidos por cliente
+                      </a>
+                    </li>
                   </ul>
-
                 </li>
               </ul>
             </div>

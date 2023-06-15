@@ -493,6 +493,94 @@ function cadastrarServico(nomeServico, precoServico, callback) {
   );
 }
 
+function listarProdutosMaisConsumidosPorCPF(clienteCPF, callback) {
+  obterClienteIDPorCPF(clienteCPF, (err, clienteID) => {
+    if (err) {
+      callback(err);
+    } else {
+      const SQL = `
+        SELECT c.ClienteNome, pr.ProdutoNome, COUNT(*) AS quantidade
+        FROM ProdutosConsumidosCliente pc
+        JOIN Produto pr ON pc.ProdutoID = pr.ProdutoID
+        JOIN Cliente c ON pc.ClienteID = c.ClienteID
+        WHERE pc.ClienteID = $1
+        GROUP BY c.ClienteNome, pr.ProdutoNome
+        ORDER BY quantidade DESC;
+      `;
+
+      cliente.query(SQL, [clienteID], (err, result) => {
+        if (err) {
+          console.log(err);
+          callback(err);
+        } else {
+          callback(null, result.rows);
+        }
+      });
+    }
+  });
+}
+
+function listarServicosMaisConsumidosPorCPF(clienteCPF, callback) {
+  obterClienteIDPorCPF(clienteCPF, (err, clienteID) => {
+    if (err) {
+      callback(err);
+    } else {
+      const SQL = `
+        SELECT c.ClienteNome, s.ServicoNome, COUNT(*) AS quantidade
+        FROM ServicoConsumidosCliente sc
+        JOIN Servico s ON sc.ServicoID = s.ServicoID
+        JOIN Cliente c ON sc.ClienteID = c.ClienteID
+        WHERE sc.ClienteID = $1
+        GROUP BY c.ClienteNome, s.ServicoNome
+        ORDER BY quantidade DESC;
+      `;
+
+      cliente.query(SQL, [clienteID], (err, result) => {
+        if (err) {
+          console.log(err);
+          callback(err);
+        } else {
+          callback(null, result.rows);
+        }
+      });
+    }
+  });
+}
+
+app.post("/servicosMaisConsumidosPorCPF", (req, res) => {
+  const clienteCPF = req.body.clienteCPF;
+
+  listarServicosMaisConsumidosPorCPF(clienteCPF, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Erro ao recuperar os serviços mais consumidos pelo cliente.",
+      });
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+
+
+app.post("/produtosMaisConsumidosPorCPF", (req, res) => {
+  const clienteCPF = req.body.clienteCPF;
+
+  listarProdutosMaisConsumidosPorCPF(clienteCPF, (err, produtos) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Erro ao listar os produtos mais consumidos pelo cliente.",
+      });
+    } else {
+      res.json(produtos);
+    }
+  });
+});
+
+
+
 app.get("/produtosMaisConsumidosPorTipoPet", (req, res) => {
   const SQL = `
     SELECT p.PetTipo, pr.ProdutoNome, COUNT(*) AS quantidade
@@ -1060,6 +1148,7 @@ app.get("/clientesMaisConsumiramServicosValor", (req, res) => {
     }
   });
 });
+
 
 
 app.listen(3001, () => {
