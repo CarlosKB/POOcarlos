@@ -49,7 +49,7 @@ export default class ListagemServicosEprodutosMaisConsumidosValor extends Listag
       ordemExibicao +=
         `posição ${i + 1}: \n  nome: ${listaOrdenadaValor[i].nome} | cpf: ${
           listaOrdenadaValor[i].cpf
-        } | preço de produros e serviços consumidos: R$${
+        } | preço de produtos e serviços consumidos: R$${
           listaOrdenadaValor[i].valorConsumido
         }` + "\n";
     }

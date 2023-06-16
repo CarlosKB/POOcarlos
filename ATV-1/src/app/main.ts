@@ -193,10 +193,6 @@ while (execucao) {
             let listarServicosConsumidor = new ListagemServicosConsumidos(empresa.getClientes)
             let listagemServicosConsumidos = listarServicosConsumidor.selecionarClienteServico(cpfClienteConServ)
             break;
-        // case 16:
-        //     let cadastrarPet = new CadastroPet(empresa.getPets)
-        //     cadastrarPet.cadastrar()
-        //     break;
         case 16:
             let cpfPet = entrada.receberTexto('Digite um cpf para atribuir ao pet que será cadastrado: ')
             let selecionadorClientePet = new Selecionador(empresa.getClientes)
@@ -204,14 +200,6 @@ while (execucao) {
             let cadastrarPet = new CadastroPetCliente(clientePet, empresa.getPets)
             cadastrarPet.cadastrarPetCliente(clientePet)
             break;
-        // case 17:
-        //     let nomePetE = entrada.receberTexto('Digite o nome do pet para a exclusão: ')
-        //     let selecionadorPetExclusao = new selecionadorPet(empresa.getPets)
-        //     let petExclusao = selecionadorPetExclusao.selecionarpets(nomePetE)
-        //     console.log(`O serviço selecionado ${petExclusao.getNome}`);
-        //     let indicePetE = empresa.getPets.indexOf(petExclusao)
-        //     delete empresa.getPets[indicePetE]
-        //     break;
         case 17:
             let cpfPetExcluir = entrada.receberTexto('Digite o cpf do dono do pet: ')
             let selecionadorClientePetExcluir = new Selecionador(empresa.getClientes)
@@ -222,14 +210,6 @@ while (execucao) {
             let indicePetCliente = clientePetExcluir.getPets.indexOf(petSelecionadoExcluir)
             delete clientePetExcluir.getPets[indicePetCliente]
             break;
-        // case 18:
-        //     let nomePetEditar = entrada.receberTexto('Digite o nome do pet para a edição')
-        //     let selecionadorPetEditar = new selecionadorPet(empresa.getPets)
-        //     let petEditar = selecionadorPetEditar.selecionarpets(nomePetEditar)
-        //     console.log(`Nome do pet selecionado ${petEditar.getNome}`);
-        //     let editorPet = new EditarPet()
-        //     editorPet.editarPet(petEditar)
-        //     break;
         case 18:
             let cpfClientePetEditar = entrada.receberTexto('Digite o cpf do cliente para edição do pet: ')
             let selecionadorClientePetEditar = new Selecionador(empresa.getClientes)
@@ -239,38 +219,19 @@ while (execucao) {
             let petSelecionado = selecionarPetClienteEditar.selecionarpets(nomePetClienteEditar)
             let editorPetCliente = new EditarPetCliente()
             editorPetCliente.editarPet(petSelecionado)
-
             break;
-        // case 19:
-        //     let listarPets = new ListagemPets(empresa.getPets)
-        //     listarPets.listar()
-        //     break;
         case 19:
             let cpfPetLista = entrada.receberTexto('Digite o CPF do cliente para listar os pets do mesmo: ')
             let selecionadorClientePetLista = new Selecionador(empresa.getClientes)
             let clientePetlista = selecionadorClientePetLista.selecionarCliente(cpfPetLista)
-
             let listarPets = new ListagemPetsCliente(clientePetlista)
             listarPets.listar()
             break;
-        // case 20:
-        //     var cpfClienteCPet = entrada.receberTexto('Digite o cpf do cliente que irá atribuir um pet: ')
-        //     var selecionadorClienteCPet = new Selecionador(empresa.getClientes)
-        //     var clienteSelecionadoCPet = selecionadorClienteCPet.selecionarCliente(cpfClienteCPet)
-
-        //     let nomePetC = entrada.receberTexto('Digite o nome do pet para atribuir: ')
-        //     let selecionadorPetC = new SelecionadorPet(empresa.getPets)
-        //     let petSelecionadoC = selecionadorPetC.selecionarpets(nomePetC)
-        //     let atribuirPet = new AtribuirPetCliente(clienteSelecionadoCPet, petSelecionadoC)
-        //     atribuirPet.atribuirPet(clienteSelecionadoCPet, petSelecionadoC)
-        //     let listarPetsAtribuidos = new ListagemClientePets(empresa.getClientes)
-        //     let listagemPetsClientes = listarPetsAtribuidos.selecionarClientePet(cpfClienteCPet)
-        //     break;
-        case 20://Este está bom
+        case 20:
             const listarProdutosConsumidosCliente = new ListagemProdutosMaisConsumidos(empresa.getClientes)
             listarProdutosConsumidosCliente.listar()
             break;
-        case 21://Quantidade de vezes que o produto foi consumido pelo cliente -- VAlidar código 21
+        case 21://Quantidade de vezes que o produto foi consumido pelo cliente 
             const listarServicosMaisConsumidosPorCliente = new ListagemServicosMaisConsumidos(empresa.getClientes)
             listarServicosMaisConsumidosPorCliente.listar()
             break;

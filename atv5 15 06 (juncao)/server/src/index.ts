@@ -138,7 +138,7 @@ function listarTelefonesPorCPF(clienteCPF, callback) {
       callback(err);
     } else {
       cliente.query(
-        "SELECT TelefoneDDD, TelefoneNumero FROM ClienteTelefone WHERE ClienteID = $1",
+        "SELECT TelefoneDDD, TelefoneNumero, clientetelefoneid FROM ClienteTelefone WHERE ClienteID = $1",
         [clienteID],
         (err, result) => {
           if (err) {
@@ -146,6 +146,8 @@ function listarTelefonesPorCPF(clienteCPF, callback) {
             callback(err);
           } else {
             const telefones = result.rows;
+            console.log(telefones);
+            
             callback(null, telefones);
           }
         }
@@ -1088,9 +1090,9 @@ app.get("/clientesMaisConsumiramServicosValor", (req, res) => {
 
 
 
-app.listen(3001, () => {
-  console.log("Servidor rodando!");
-});
+// app.listen(3001, () => {
+//   console.log("Servidor rodando!");
+// });
 // ADIÇÕES - STEF -----------------------------------------------------------------------------
 function obterNomeClientePorID(clienteID, callback) {
   cliente.query(
