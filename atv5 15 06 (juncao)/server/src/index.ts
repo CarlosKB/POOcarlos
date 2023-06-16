@@ -62,6 +62,7 @@ function cadastroCliente(
   ClienteDataCadastro,
   callback
 ) {
+  ClienteDataCadastro =  new Date().toLocaleString();
   let SQL =
     "INSERT INTO cliente (ClienteNomeSocial, ClienteNome, ClienteCPF, ClienteCPFDataEmissao, ClientedataCadastro) VALUES ($1, $2, $3, $4, $5) RETURNING ClienteID";
   cliente.query(

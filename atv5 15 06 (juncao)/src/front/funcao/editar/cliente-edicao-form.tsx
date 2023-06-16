@@ -3,6 +3,7 @@ import Navbar from "../componentes/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function ClienteFormEdicao() {
   interface Cliente {
@@ -14,6 +15,11 @@ export default function ClienteFormEdicao() {
   }
   const [cpf, setCpf] = useState("");
   const [cliente, setCliente] = useState<Cliente | null>(null);
+
+  const validarCPF = (cpf: string) => {
+    const cpfRegex = /^([0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2})$/;
+    return cpfRegex.test(cpf);
+  };
 
   const handleBuscarCliente = () => {
     // Faz a requisição para o backend para buscar o cliente pelo CPF
@@ -63,6 +69,7 @@ export default function ClienteFormEdicao() {
     console.log(clienteData);
 
     // Exemplo de como fazer uma requisição PUT com o axios
+    if(validarCPF(clienteData.clientenovocpf)){
     axios
       .put(`http://localhost:3001/atualizarCliente/${cpf}`, clienteData)
       .then((response) => {
@@ -75,6 +82,14 @@ export default function ClienteFormEdicao() {
         // Lógica para manipular erros
         console.log(error);
       });
+    }
+    else {
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: 'CPF inválido.',
+      });
+    }
   };
 
   const handleExcluirCliente = () => {

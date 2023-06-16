@@ -26,7 +26,7 @@ interface FormValues {
 export default function ClienteFormCadastro() {
 
 
-  const [values, setValues] = useState<FormValues>({ nome: "", nomesocial: "", cpf: "", cpfdataemissao: "", datacadastro: "", petnome: "", petraca: "", pettipo: "", petgenero: "", telefoneddd: "", telefonenumero: ""});
+  const [values, setValues] = useState<FormValues>({ nome: "", nomesocial: "", cpf: "", cpfdataemissao: "", datacadastro: "", petnome: "", petraca: "", pettipo: "", petgenero: "", telefoneddd: "", telefonenumero: "" });
 
   const handleChangeValues = (event: ChangeEvent<HTMLInputElement>) => {
     setValues((prevValues) => ({
@@ -36,12 +36,17 @@ export default function ClienteFormCadastro() {
   };
 
   const limparCampos = () => {
-    setValues({ nome: "", nomesocial: "", cpf: "", cpfdataemissao: "", datacadastro: "", petnome: "", petraca: "", pettipo: "", petgenero: "", telefoneddd: "", telefonenumero: ""});
+    setValues({ nome: "", nomesocial: "", cpf: "", cpfdataemissao: "", datacadastro: "", petnome: "", petraca: "", pettipo: "", petgenero: "", telefoneddd: "", telefonenumero: "" });
   };
 
+  const validarCPF = (cpf: string) => {
+    const cpfRegex = /^([0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2})$/;
+    return cpfRegex.test(cpf);
+  };
 
   const handleClickButton = async () => {
-    const response = await axios.post("http://localhost:3001/cadastroCliente", {
+    if (validarCPF(values.cpf)) {
+      const response = await axios.post("http://localhost:3001/cadastroCliente", {
         ClienteNomeSocial: values.nomesocial,
         ClienteNome: values.nome,
         ClienteCPF: values.cpf,
@@ -54,18 +59,25 @@ export default function ClienteFormCadastro() {
         TelefoneDDD: values.telefoneddd,
         TelefoneNumero: values.telefonenumero,
 
-      }).then((response)=>{
-          if(response.data.message === 'Cliente, pet e telefone cadastrados com sucesso.'){
-            Swal.fire("Sucesso!", response.data.message, "success");
-            limparCampos()
-          }
-          if(response.data.error === 'Erro ao cadastrar o produto')
+      }).then((response) => {
+        if (response.data.msg === 'Cliente, pet e telefone cadastrados com sucesso.') {
+          Swal.fire("Sucesso!", response.data.msg, "success");
+          limparCampos()
+        }
+        if (response.data.error === 'Erro ao cadastrar o produto')
           Swal.fire({
             icon: "error",
             title: "Erro",
             text: response.data.error,
           });
       })
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: 'CPF inválido.',
+      });
+    }
   }
   return (
     <div>
@@ -98,7 +110,7 @@ export default function ClienteFormCadastro() {
           onChange={handleChangeValues}
         />
       </div>
-      
+
       <div
         className="input-group position-relative ms-5"
         style={{ width: "600px", top: "80px" }}
@@ -173,15 +185,15 @@ export default function ClienteFormCadastro() {
           </a>
         </p>
         <div className="collapse" id="collapseExample">
-          <br/>
-          <br/>
-          <div className="input-group mb-3" style={{left: "-197px"}}>
+          <br />
+          <br />
+          <div className="input-group mb-3" style={{ left: "-197px" }}>
             <input
               type="text"
               className="form-control"
               placeholder="DDD"
               aria-label="Username"
-              style={{width: "59px"}}
+              style={{ width: "59px" }}
               id="telefoneddd"
               name="telefoneddd"
               value={values.telefoneddd}
@@ -192,7 +204,7 @@ export default function ClienteFormCadastro() {
               className="form-control"
               placeholder="Telefone"
               aria-label="Server"
-              style={{width: "200px"}}
+              style={{ width: "200px" }}
               id="telefonenumero"
               name="telefonenumero"
               value={values.telefonenumero}
