@@ -28,6 +28,15 @@ export default class ListagemClientes extends Listagem {
                 console.log('-');
                 
             })
+            console.log('------------');
+            
+            cliente.getRgs.forEach(rg=>{
+                console.log(`Número RG: ${rg.getValor}`);
+                console.log(`Data emissão: ${rg.getDataEmissao}`);
+                
+                console.log('-');
+                
+            })
             console.log(`-------------------//-------------------`);
         });
         console.log(`\n`);

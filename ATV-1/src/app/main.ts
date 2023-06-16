@@ -67,8 +67,8 @@ while (execucao) {
     console.log(`17 - Excluir pet`);
     console.log(`18 - Editar pet`);
     console.log(`19 - Listar pets`);
-    console.log(`20 - Listar quantidade de vezes que o produto foi consumido pelo cliente - Ajustar`);
-    console.log(`21 - Inutilizado - Ajustar`);
+    console.log(`20 - Listar quantidade de vezes que o cliente consumir um produto`);
+    console.log(`21 - Listar quantidade de vezes que o cliente consumiu um serviço`);
     console.log(`22 - Listar os clientes que mais consumiram produtos e serviços em quantidade`);
     console.log(`23 - Listar os clientes que mais consumiram produtos e serviços por valor`);
     console.log(`24 - listar os produtos e serviços mais consumidos `);
@@ -271,8 +271,8 @@ while (execucao) {
             listarProdutosConsumidosCliente.listar()
             break;
         case 21://Quantidade de vezes que o produto foi consumido pelo cliente -- VAlidar código 21
-            const listarProdutosMaisConsumidosPorCliente = new ListarProdutosMaisConsumidosPorCliente(empresa.getClientes)
-            listarProdutosMaisConsumidosPorCliente.listar()
+            const listarServicosMaisConsumidosPorCliente = new ListagemServicosMaisConsumidos(empresa.getClientes)
+            listarServicosMaisConsumidosPorCliente.listar()
             break;
         case 22://Top dos cliente que mais consumiram produtos e serviços
             const listarServicosEprodutosMaisConsumidos = new ListagemServicosEprodutosMaisConsumidos(empresa)
