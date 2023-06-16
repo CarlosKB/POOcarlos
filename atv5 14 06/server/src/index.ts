@@ -158,7 +158,6 @@ function recuperarClienteServicoPetID(
         console.log(err);
         callback(err);
       } else {
-        // console.log(result.rows);
         callback(null, result.rows);
       }
     }
