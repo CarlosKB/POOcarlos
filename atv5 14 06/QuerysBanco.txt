@@ -5,10 +5,16 @@ CREATE TABLE Cliente (
     ClienteNomeSocial VARCHAR(255),
     ClienteCPF VARCHAR(11),
     ClienteCPFDataEmissao VARCHAR(30),
-    ClienteRG VARCHAR(20),
-    ClienteRGDataEmissao VARCHAR(30),
     ClientedataCadastro VARCHAR(30),
     ClienteNome VARCHAR(255) -- Novo campo adicionado
+);
+
+CREATE TABLE ClienteRG (
+    ClienteRGID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ClienteID UUID,
+    RGNumero VARCHAR(20),
+    RGDataEmissao VARCHAR(30),
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID)
 );
 
 CREATE TABLE ClienteTelefone (

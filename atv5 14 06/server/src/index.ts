@@ -17,42 +17,42 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-function cadastroCliente(
-  ClienteNomeSocial,
-  ClienteNome,
-  ClienteCPF,
-  ClienteCPFDataEmissao,
-  ClienteRG,
-  ClienteRGDataEmissao,
-  ClienteDataCadastro,
-  callback
-) {
-  ClienteDataCadastro = new Date().toLocaleString();
-  let SQL =
-    "INSERT INTO cliente (ClienteNomeSocial, ClienteNome, ClienteCPF, ClienteCPFDataEmissao, ClienteRG, ClienteRGDataEmissao, ClientedataCadastro) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING ClienteID";
-  cliente.query(
-    SQL,
-    [
-      ClienteNomeSocial,
-      ClienteNome,
-      ClienteCPF,
-      ClienteCPFDataEmissao,
-      ClienteRG,
-      ClienteRGDataEmissao,
-      ClienteDataCadastro,
-    ],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        callback(err);
-      } else {
-        const clienteID = result.rows[0].clienteid; // Corrected variable name
+// function cadastroCliente(
+//   ClienteNomeSocial,
+//   ClienteNome,
+//   ClienteCPF,
+//   ClienteCPFDataEmissao,
+//   ClienteRG,
+//   ClienteRGDataEmissao,
+//   ClienteDataCadastro,
+//   callback
+// ) {
+//   ClienteDataCadastro = new Date().toLocaleString();
+//   let SQL =
+//     "INSERT INTO cliente (ClienteNomeSocial, ClienteNome, ClienteCPF, ClienteCPFDataEmissao, ClienteRG, ClienteRGDataEmissao, ClientedataCadastro) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING ClienteID";
+//   cliente.query(
+//     SQL,
+//     [
+//       ClienteNomeSocial,
+//       ClienteNome,
+//       ClienteCPF,
+//       ClienteCPFDataEmissao,
+//       ClienteRG,
+//       ClienteRGDataEmissao,
+//       ClienteDataCadastro,
+//     ],
+//     (err, result) => {
+//       if (err) {
+//         console.log(err);
+//         callback(err);
+//       } else {
+//         const clienteID = result.rows[0].clienteid; // Corrected variable name
 
-        callback(null, clienteID);
-      }
-    }
-  );
-}
+//         callback(null, clienteID);
+//       }
+//     }
+//   );
+// }
 
 function cadastrarPet(
   ClienteID,
@@ -748,62 +748,6 @@ app.post("/cadastrarPetPorCPF", (req, res) => {
   );
 });
 
-// app.get("/servicosMaisConsumidosPorRaca", (req, res) => {
-//   const { raca } = req.body;
-
-//   listarServicosMaisConsumidosPorRaca(raca, (err, result) => {
-//     if (err) {
-//       res
-//         .status(500)
-//         .json({ error: "Erro ao obter os serviços mais consumidos por raça" });
-//     } else {
-//       res.json(result);
-//     }
-//   });
-// });
-
-// app.get("/servicosMaisConsumidosPorTipoPet/:tipoPet", (req, res) => {
-//   const tipoPet = req.params.tipoPet;
-
-//   listarServicosMaisConsumidosPorTipoPet(tipoPet, (err, result) => {
-//     if (err) {
-//       res.status(500).json({
-//         error: "Erro ao listar serviços mais consumidos por tipo de pet",
-//       });
-//     } else {
-//       res.json(result);
-//     }
-//   });
-// });
-
-// app.get("/produtosMaisConsumidosPorTipoPet", (req, res) => {
-//   const { tipoPet } = req.body;
-
-//   listarProdutosMaisConsumidosPorTipoPet(tipoPet, (err, result) => {
-//     if (err) {
-//       res.status(500).json({
-//         error: "Erro ao listar produtos mais consumidos por tipo de pet",
-//       });
-//     } else {
-//       res.json(result);
-//     }
-//   });
-// });
-
-// app.get("/produtosMaisConsumidosPorRaca", (req, res) => {
-//   const { raca } = req.body;
-
-//   listarProdutosMaisConsumidosPorRaca(raca, (err, result) => {
-//     if (err) {
-//       res
-//         .status(500)
-//         .json({ error: "Erro ao listar produtos mais consumidos por raça" });
-//     } else {
-//       res.json(result);
-//     }
-//   });
-// });
-
 app.get("/listarProdutos", (req, res) => {
   listarProdutos((err, produtos) => {
     if (err) {
@@ -882,83 +826,72 @@ app.post("/consumirProduto", (req, res) => {
 });
 //Final ConsumirProdutoServico
 
-app.post("/cadastroCliente", (req, res) => {
-  const {
-    ClienteNomeSocial,
-    ClienteNome,
-    ClienteCPF,
-    ClienteCPFDataEmissao,
-    ClienteRG,
-    ClienteRGDataEmissao,
-    ClienteDataCadastro,
-  } = req.body;
+// app.post("/cadastroCliente", (req, res) => {
+//   const {
+//     ClienteNomeSocial,
+//     ClienteNome,
+//     ClienteCPF,
+//     ClienteCPFDataEmissao,
+//     ClienteRG,
+//     ClienteRGDataEmissao,
+//     ClienteDataCadastro,
+//   } = req.body;
 
-  cadastroCliente(
-    ClienteNomeSocial,
-    ClienteNome,
-    ClienteCPF,
-    ClienteCPFDataEmissao,
-    ClienteRG,
-    ClienteRGDataEmissao,
-    ClienteDataCadastro,
-    (err, clienteID) => {
-      if (err) {
-        res.status(500).json({ error: "Erro ao cadastrar cliente." });
-      } else {
-        const {
-          PetNome,
-          PetRaca,
-          PetTipo,
-          PetGenero,
-          TelefoneDDD,
-          TelefoneNumero,
-        } = req.body;
+//   cadastroCliente(
+//     ClienteNomeSocial,
+//     ClienteNome,
+//     ClienteCPF,
+//     ClienteCPFDataEmissao,
+//     ClienteRG,
+//     ClienteRGDataEmissao,
+//     ClienteDataCadastro,
+//     (err, clienteID) => {
+//       if (err) {
+//         res.status(500).json({ error: "Erro ao cadastrar cliente." });
+//       } else {
+//         const {
+//           PetNome,
+//           PetRaca,
+//           PetTipo,
+//           PetGenero,
+//           TelefoneDDD,
+//           TelefoneNumero,
+//         } = req.body;
 
-        cadastrarPet(
-          clienteID,
-          PetNome,
-          PetRaca,
-          PetTipo,
-          PetGenero,
-          (err, resultPet) => {
-            if (err) {
-              res.status(500).json({ error: "Erro ao cadastrar pet." });
-            } else {
-              cadastrarTelefone(
-                clienteID,
-                TelefoneDDD,
-                TelefoneNumero,
-                (err, resultTelefone) => {
-                  if (err) {
-                    res
-                      .status(500)
-                      .json({ error: "Erro ao cadastrar telefone." });
-                  } else {
-                    res.send({
-                      msg: "Cliente, pet e telefone cadastrados com sucesso.",
-                    });
-                  }
-                }
-              );
-            }
-          }
-        );
-      }
-    }
-  );
-});
+//         cadastrarPet(
+//           clienteID,
+//           PetNome,
+//           PetRaca,
+//           PetTipo,
+//           PetGenero,
+//           (err, resultPet) => {
+//             if (err) {
+//               res.status(500).json({ error: "Erro ao cadastrar pet." });
+//             } else {
+//               cadastrarTelefone(
+//                 clienteID,
+//                 TelefoneDDD,
+//                 TelefoneNumero,
+//                 (err, resultTelefone) => {
+//                   if (err) {
+//                     res
+//                       .status(500)
+//                       .json({ error: "Erro ao cadastrar telefone." });
+//                   } else {
+//                     res.send({
+//                       msg: "Cliente, pet e telefone cadastrados com sucesso.",
+//                     });
+//                   }
+//                 }
+//               );
+//             }
+//           }
+//         );
+//       }
+//     }
+//   );
+// });
 
-// app.post('/cadastroCliente', async (req, res) => {
-//     const { ClienteNomeSocial } = req.body
-//     const { ClienteCPF } = req.body
-//     const { ClienteCPFDataEmissao } = req.body
-//     const { ClienteRG } = req.body
-//     const { ClienteRGDataEmissao } = req.body
-//     const { ClienteDataCadastro } = req.body
-
-//     await cadastroCliente(ClienteNomeSocial, ClienteCPF, ClienteCPFDataEmissao, ClienteRG, ClienteRGDataEmissao, ClienteDataCadastro, res)
-
-// })
 
 function obterNomeClientePorID(clienteID, callback) {
     cliente.query(
@@ -1154,4 +1087,3 @@ app.get("/clientesMaisConsumiramServicosValor", (req, res) => {
 app.listen(3001, () => {
   console.log("Servidor rodando!");
 });
-
